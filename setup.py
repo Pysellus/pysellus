@@ -15,13 +15,14 @@ setup(
         'Operating System :: POSIX :: Linux',
         'Operating System :: MacOS :: MacOS X',
         'Programming Language :: Python :: 3.4',
-        'Topic :: Software Development :: Quality Assurance'
+        'Topic :: Software Development :: Quality Assurance',
+        'License :: OSI Approved :: MIT License'
     ],
     keywords='stream streaming api test testing quality',
     author='',
     author_email='',
     url='',
-    license='',
+    license='MIT',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     include_package_data=True,
     zip_safe=False,
