@@ -1,6 +1,6 @@
-from expects import expect, equal
-from doublex_expects import *
 from doublex import Spy, Mock
+from expects import expect, equal
+from doublex_expects import have_been_called
 
 from pysellus import registrar
 from pysellus.registrar import expect as expect_
