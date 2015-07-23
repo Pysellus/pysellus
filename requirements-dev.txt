@@ -3,3 +3,4 @@ mamba
 expects
 doublex
 doublex-expects
+python-coveralls
