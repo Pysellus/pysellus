@@ -6,14 +6,20 @@ from inspect import isfunction
 def load(directory):
     functions = []
 
-    for filename in _get_python_files(directory):
-        module = import_module(_path_to_module(directory, filename))
+    for module in _get_modules(directory):
         for name in dir(module):
             value = getattr(module, name)
             if isfunction(value):
                 functions.append(value)
 
     return functions
+
+
+def _get_modules(directory):
+    return [
+        import_module(_path_to_module(directory, filename))
+        for filename in _get_python_files(directory)
+    ]
 
 
 def _get_python_files(directory):
