@@ -12,3 +12,8 @@ def build_threads(stream_to_observers, fn):
 
 def make_thread(fn, stream, observer):
     return Thread(target=fn, args=(stream, observer))
+
+
+def launch_threads(threads):
+    for thread in threads:
+        thread.start()
