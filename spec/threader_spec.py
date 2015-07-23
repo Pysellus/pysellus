@@ -67,3 +67,17 @@ with description('the threader module'):
 
         expect(result[0]).to(be(stream))
         expect(result[1]).to(be(observer))
+
+    with it('should call `run` on every thread passed to the launch_threads function'):
+        a_thread = Spy()
+        another_thread = Spy()
+
+        threads = [
+            a_thread,
+            another_thread
+        ]
+
+        threader.launch_threads(threads)
+
+        for thread in threads:
+            expect(thread.start).to(have_been_called.once)
