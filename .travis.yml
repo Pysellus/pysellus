@@ -1,0 +1,6 @@
+language: python
+python:
+  - "3.4"
+install: "pip install -r requirements.txt -r requirements-dev.txt"
+before_script: python setup.py develop
+script: mamba
