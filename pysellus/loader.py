@@ -9,7 +9,7 @@ def load(directory):
     for module in _get_modules(directory):
         for name in dir(module):
             value = getattr(module, name)
-            if isfunction(value):
+            if isfunction(value) and not name.startswith('_'):
                 functions.append(value)
 
     return functions
