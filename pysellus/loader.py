@@ -17,9 +17,6 @@ def load(directory):
 
 
 def _get_modules(directory):
-    if directory.endswith('/'):
-        directory = directory[:-1]
-
     sys.path.insert(0, directory)
     return [
         import_module(filename)
