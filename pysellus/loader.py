@@ -1,6 +1,7 @@
 import os
-from importlib import import_module
+import sys
 from inspect import isfunction
+from importlib import import_module
 
 
 def load(directory):
@@ -16,21 +17,26 @@ def load(directory):
 
 
 def _get_modules(directory):
+    if directory.endswith('/'):
+        directory = directory[:-1]
+
+    sys.path.insert(0, directory)
     return [
-        import_module(_path_to_module(directory, filename))
+        import_module(filename)
         for filename in _get_python_files(directory)
     ]
 
 
 def _get_python_files(directory):
-    return [file for file in os.listdir(directory) if not file.startswith('__')]
+    return [
+        _remove_file_extension(file)
+        for file in os.listdir(directory)
+        if not file.startswith('__') and _is_python_file(file)
+    ]
 
 
-def _path_to_module(path, filename):
-    return os.path.join(
-        os.path.dirname(path),
-        _remove_file_extension(filename)
-    ).replace('/', '.')
+def _is_python_file(filename):
+    return filename.endswith('.py')
 
 
 def _remove_file_extension(filename):
