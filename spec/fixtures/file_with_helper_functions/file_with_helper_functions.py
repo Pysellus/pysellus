@@ -1,10 +1,10 @@
-def _helper_function():
+def helper_function():
     pass
 
 
-def _another_helper_function():
+def another_helper_function():
     pass
 
 
-def function():
+def pscheck_function():
     pass
