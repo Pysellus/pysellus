@@ -10,7 +10,7 @@ def load(directory):
     for module in _get_modules(directory):
         for name in dir(module):
             value = getattr(module, name)
-            if isfunction(value) and not name.startswith('_'):
+            if isfunction(value) and name.startswith('pscheck_'):
                 functions.append(value)
 
     return functions

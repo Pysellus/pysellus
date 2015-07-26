@@ -1,4 +1,4 @@
-def file_1_function_a():
+def pscheck_file_1_function_a():
     pass
 
 a_number = 7
@@ -6,5 +6,5 @@ a_number = 7
 a_string = 'bleh'
 
 
-def file_1_function_b():
+def pscheck_file_1_function_b():
     pass

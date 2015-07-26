@@ -1,8 +1,8 @@
-def a_function():
+def pscheck_a_function():
     pass
 
 
-def another_function():
+def pscheck_another_function():
     pass
 
 a_number = 7
