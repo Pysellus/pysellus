@@ -31,3 +31,23 @@ with description('the registrar module'):
             expect(function).to_not(have_been_called.once)
 
         expect(registrar.stream_to_observers[stream]).to(equal(function_list))
+
+    with it('should merge n function lists if applied to the same stream'):
+        spy = Spy()
+        stream = Mock()
+
+        first_function_list = [
+            spy.first_function,
+            spy.second_function
+        ]
+
+        second_function_list = [
+            spy.third_function,
+            spy.fourth_function
+        ]
+
+        expect_(stream)(*first_function_list)
+        expect_(stream)(*second_function_list)
+
+        expect(registrar.stream_to_observers[stream]).to(equal(first_function_list +
+                                                               second_function_list))
