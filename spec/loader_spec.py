@@ -21,6 +21,6 @@ with description('the loader module loads all top-level functions in a directory
         )
 
     with it("shouldn't load private functions (starting with underscore)"):
-        expect(loader.load('spec/fixtures/file_with_private_functions/')).to(
+        expect(loader.load('spec/fixtures/file_with_helper_functions/')).to(
             contain_exactly_function_called('function')
         )
