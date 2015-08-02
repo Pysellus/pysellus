@@ -8,7 +8,7 @@ from doublex_expects import have_been_called
 from pysellus import threader
 
 with description('the threader module'):
-    with it('should create as many threads as the sum of len(values) of the supplied dict'):
+    with it('should create as many threads as streams in the supplied dict'):
         a_stream = Mock()
         another_stream = Mock()
 
@@ -23,18 +23,16 @@ with description('the threader module'):
 
         threads = threader.build_threads(streams_to_observers, foo)
 
-        expected_length = sum(
-            len(fn_list) for fn_list in streams_to_observers.values()
-        )
+        expected_length = len(streams_to_observers)
 
         expect(len(threads)).to(be(expected_length))
 
     with it('should create a properly initialized thread'):
         stream = Mock()
-        observer = Spy()
+        subject = Spy()
         target = Spy().target_function
 
-        thread = threader.make_thread(target, stream, observer)
+        thread = threader.make_thread(target, stream, subject)
 
         thread.start()
         thread.join()
@@ -43,7 +41,7 @@ with description('the threader module'):
 
     with it('should call the target function with the correct arguments'):
         stream = Mock()
-        observer = Spy()
+        subject = Spy()
         que = queue.Queue(maxsize=1)
 
         # Return a list with the stream and the observer fn
@@ -57,7 +55,7 @@ with description('the threader module'):
         # as a parameter to make_thread
         target_partial = partial(target_wrapper, que)
 
-        thread = threader.make_thread(target_partial, stream, observer)
+        thread = threader.make_thread(target_partial, stream, subject)
 
         thread.start()
         thread.join()
@@ -66,7 +64,7 @@ with description('the threader module'):
         # result is [stream, observer]
 
         expect(result[0]).to(be(stream))
-        expect(result[1]).to(be(observer))
+        expect(result[1]).to(be(subject))
 
     with it('should call `run` on every thread passed to the launch_threads function'):
         a_thread = Spy()
