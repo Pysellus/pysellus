@@ -18,7 +18,7 @@ def load(path):
 
 
 def _get_module_name_from_path(path):
-    return _remove_file_extension(path.split('/')[-1])
+    return _remove_extension(path.split('/')[-1])
 
 
 def _get_checks_from_module(module):
@@ -44,9 +44,9 @@ def _get_modules(directory):
 
 def _get_python_files(directory):
     return [
-        _remove_file_extension(file)
-        for file in os.listdir(directory)
-        if not file.startswith('__') and _is_python_file(file)
+        _remove_extension(filename)
+        for filename in os.listdir(directory)
+        if not filename.startswith('__') and _is_python_file(filename)
     ]
 
 
@@ -54,5 +54,5 @@ def _is_python_file(filename):
     return filename.endswith('.py')
 
 
-def _remove_file_extension(filename):
+def _remove_extension(filename):
     return filename[:-3]
