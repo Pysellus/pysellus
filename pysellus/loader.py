@@ -4,15 +4,33 @@ from inspect import isfunction
 from importlib import import_module
 
 
-def load(directory):
+def load(path):
+    if _is_python_file(path):
+        sys.path.insert(0, os.path.dirname(path))
+        module = import_module(_get_module_name_from_path(path))
+        return _get_checks_from_module(module)
+
     functions = []
+    for module in _get_modules(path):
+        functions += _get_checks_from_module(module)
 
-    for module in _get_modules(directory):
-        for name in dir(module):
-            value = getattr(module, name)
-            if isfunction(value) and name.startswith('pscheck_'):
-                functions.append(value)
+    return functions
 
+
+def _get_module_name_from_path(path):
+    return _remove_file_extension(path.split('/')[-1])
+
+
+def _get_checks_from_module(module):
+    """
+    Gets all setup functions from the given module.
+    Setup functions are required to start with 'pscheck_'
+    """
+    functions = []
+    for name in dir(module):
+        value = getattr(module, name)
+        if isfunction(value) and name.startswith('pscheck_'):
+            functions.append(value)
     return functions
 
 
