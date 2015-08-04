@@ -24,17 +24,17 @@ with description('the threader module'):
 
         expect(len(threads)).to(be(len(streams_to_observers)))
 
-    with it('should create a properly initialized thread'):
+    with it('should initialize threads by calling the given target function'):
         stream = Mock()
         subject = Spy()
-        target = Spy().target_function
+        target_function = Spy().target_function
 
-        thread = threader.make_thread(target, stream, subject)
+        thread = threader.make_thread(target_function, stream, subject)
 
         thread.start()
         thread.join()
 
-        expect(target).to(have_been_called.once)
+        expect(target_function).to(have_been_called.once)
 
     with it('should call the target function with the correct arguments'):
         stream = Mock()
