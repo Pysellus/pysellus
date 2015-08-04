@@ -34,7 +34,7 @@ with description('the threader module'):
         thread.start()
         thread.join()
 
-        expect(target).to(have_been_called)
+        expect(target).to(have_been_called.once)
 
     with it('should call the target function with the correct arguments'):
         stream = Mock()
