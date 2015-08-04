@@ -64,16 +64,16 @@ def register_function_to_subject(subject, *functions):
 
 
 def notify_element(test_name, element_payload):
-    _notify_integration(test_name, element_payload)
+    _notify_integrations(test_name, element_payload)
 
 
 def notify_error(test_name, element_payload):
-    _notify_integration(test_name, element_payload, error=True)
+    _notify_integrations(test_name, element_payload, error=True)
 
 
-def _notify_integration(test_name, message, error=False):
+def _notify_integrations(test_name, message, error=False):
     """
-    _notify_integration :: String -> Any -> Boolean -> IO
+    _notify_integrations :: String -> Any -> Boolean -> IO
 
     Given a function name, and a Payload object, send the payload to the appropiate subject.
 
