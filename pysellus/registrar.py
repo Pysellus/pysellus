@@ -17,10 +17,10 @@ def expect(stream):
 
     Given an observable, return a function that takes a function tuple, and maps them
 
-    Store our caller function name for future use (see _get_expect_caller_function_name)
+    Store our caller function name for future use (see _get_name_of_expect_caller)
 
     """
-    test_name = _get_expect_caller_function_name()
+    test_name = _get_name_of_expect_caller()
 
     def tests_registrar(*testers):
         """
@@ -67,12 +67,13 @@ def expect(stream):
                     })
             # Save the wrapper, associated with the enclosing setup function
             register_tester_for_stream(stream, tester_wrapper)
+
     return tests_registrar
 
 
-def _get_expect_caller_function_name():
+def _get_name_of_expect_caller():
     """
-    _get_expect_caller_function_name :: -> String
+    _get_name_of_expect_caller :: -> String
 
     Get the function name of the caller to the `expect` function
 
@@ -100,8 +101,9 @@ def _get_expect_caller_function_name():
         # ... more frames
         1,  # call to `pscheck_` function, whose name we want to retrieve
         1,  # call to `expect`
-        1,  # call to this `_get_expect_caller_function_name`
+        1,  # call to this function, `_get_name_of_expect_caller`
     ]) - 1  # stack is 0-indexed
+
     return inspect.stack()[distance_to_setup_function][3]
 
 
