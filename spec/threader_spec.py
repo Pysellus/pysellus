@@ -23,9 +23,7 @@ with description('the threader module'):
 
         threads = threader.build_threads(streams_to_observers, foo)
 
-        expected_length = len(streams_to_observers)
-
-        expect(len(threads)).to(be(expected_length))
+        expect(len(threads)).to(be(len(streams_to_observers)))
 
     with it('should create a properly initialized thread'):
         stream = Mock()
