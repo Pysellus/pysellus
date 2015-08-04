@@ -12,7 +12,6 @@ with description('the threader module'):
         a_stream = Mock()
         another_stream = Mock()
 
-        foo = Spy()
         a_function = Spy()
         another_function = Spy()
 
@@ -21,7 +20,7 @@ with description('the threader module'):
             another_stream: [a_function, another_function]
         }
 
-        threads = threader.build_threads(streams_to_observers, foo)
+        threads = threader.build_threads(streams_to_observers)
 
         expect(len(threads)).to(be(len(streams_to_observers)))
 

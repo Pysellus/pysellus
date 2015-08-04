@@ -3,9 +3,6 @@ import argparse
 from pysellus import loader, registrar, threader
 
 
-def do_subscribe(s, o):
-    s.subscribe(o)
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -17,6 +14,6 @@ if __name__ == '__main__':
 
     threader.launch_threads(
         threader.build_threads(
-            registrar.register(loader.load(directory)), do_subscribe
+            registrar.register(loader.load(directory))
         )
     )
