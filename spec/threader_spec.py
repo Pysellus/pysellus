@@ -12,12 +12,12 @@ with description('the threader module'):
         a_stream = Mock()
         another_stream = Mock()
 
-        a_function = Spy()
-        another_function = Spy()
+        a_tester = Spy().a_tester
+        another_tester = Spy().another_tester
 
         streams_to_observers = {
-            a_stream: [a_function],
-            another_stream: [a_function, another_function]
+            a_stream: [a_tester],
+            another_stream: [a_tester, another_tester]
         }
 
         threads = threader.build_threads(streams_to_observers)
