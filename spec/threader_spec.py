@@ -1,4 +1,4 @@
-import queue
+from queue import Queue
 from functools import partial
 
 from doublex import Spy, Mock
@@ -12,7 +12,6 @@ with description('the threader module'):
         a_stream = Mock()
         another_stream = Mock()
 
-        foo = Spy()
         a_function = Spy()
         another_function = Spy()
 
@@ -21,28 +20,26 @@ with description('the threader module'):
             another_stream: [a_function, another_function]
         }
 
-        threads = threader.build_threads(streams_to_observers, foo)
+        threads = threader.build_threads(streams_to_observers)
 
-        expected_length = len(streams_to_observers)
+        expect(len(threads)).to(be(len(streams_to_observers)))
 
-        expect(len(threads)).to(be(expected_length))
-
-    with it('should create a properly initialized thread'):
+    with it('should initialize threads by calling the given target function'):
         stream = Mock()
         subject = Spy()
-        target = Spy().target_function
+        target_function = Spy().target_function
 
-        thread = threader.make_thread(target, stream, subject)
+        thread = threader.make_thread(target_function, stream, subject)
 
         thread.start()
         thread.join()
 
-        expect(target).to(have_been_called)
+        expect(target_function).to(have_been_called.once)
 
     with it('should call the target function with the correct arguments'):
         stream = Mock()
         subject = Spy()
-        que = queue.Queue(maxsize=1)
+        queue = Queue(maxsize=1)
 
         # Return a list with the stream and the observer fn
         target_function = lambda s, o: [s, o]
@@ -53,14 +50,14 @@ with description('the threader module'):
 
         # We define a partial so that we don't have to pass the queue
         # as a parameter to make_thread
-        target_partial = partial(target_wrapper, que)
+        target_partial = partial(target_wrapper, queue)
 
         thread = threader.make_thread(target_partial, stream, subject)
 
         thread.start()
         thread.join()
 
-        result = que.get()
+        result = queue.get()
         # result is [stream, observer]
 
         expect(result[0]).to(be(stream))

@@ -1,21 +1,27 @@
-import rx.subjects as subjects
+from rx.subjects import Subject
 
 from threading import Thread
 
 
-def build_threads(stream_to_observers, fn):
+def perform_subscribe(stream, observer):
+    stream.subscribe(observer)
+
+
+def build_threads(stream_to_observers, thread_target=perform_subscribe):
     threads = []
-    for k, v in stream_to_observers.items():
-        subject = subjects.Subject()
-        for e in v:
-            subject.subscribe(e)
-        threads.append(make_thread(fn, k, subject))
+
+    for stream, observers in stream_to_observers.items():
+        subject = Subject()
+        for observer in observers:
+            subject.subscribe(observer)
+
+        threads.append(make_thread(thread_target, stream, subject))
 
     return threads
 
 
-def make_thread(fn, stream, subject):
-    return Thread(target=fn, args=(stream, subject))
+def make_thread(thread_target, stream, subject):
+    return Thread(target=thread_target, args=(stream, subject))
 
 
 def launch_threads(threads):
