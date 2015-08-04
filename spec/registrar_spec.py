@@ -34,7 +34,7 @@ with description('the registrar module'):
             len(registrar.stream_to_observers[stream])
         ).to(equal(len(function_list)))
 
-    with it('should merge n function lists if applied to the same stream'):
+    with it('should merge multiple function lists if applied to the same stream'):
         spy = Spy()
         stream = Mock()
 
