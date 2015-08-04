@@ -30,7 +30,9 @@ with description('the registrar module'):
         for function in function_list:
             expect(function).to_not(have_been_called.once)
 
-        expect(registrar.stream_to_observers[stream]).to(equal(function_list))
+        expect(
+            len(registrar.stream_to_observers[stream])
+        ).to(equal(len(function_list)))
 
     with it('should merge n function lists if applied to the same stream'):
         spy = Spy()
@@ -49,5 +51,6 @@ with description('the registrar module'):
         expect_(stream)(*first_function_list)
         expect_(stream)(*second_function_list)
 
-        expect(registrar.stream_to_observers[stream]).to(equal(first_function_list +
-                                                               second_function_list))
+        expect(
+            len(registrar.stream_to_observers[stream])
+        ).to(equal(len(first_function_list + second_function_list)))
