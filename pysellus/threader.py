@@ -1,4 +1,4 @@
-import rx.subjects as subjects
+from rx.subjects import Subject
 
 from threading import Thread
 
@@ -11,7 +11,7 @@ def build_threads(stream_to_observers, thread_target=perform_subscribe):
     threads = []
 
     for stream, observers in stream_to_observers.items():
-        subject = subjects.Subject()
+        subject = Subject()
         for observer in observers:
             subject.subscribe(observer)
 
