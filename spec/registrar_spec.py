@@ -28,7 +28,7 @@ with description('the registrar module'):
         expect_(stream)(*function_list)
 
         for function in function_list:
-            expect(function).to_not(have_been_called.once)
+            expect(function).to_not(have_been_called)
 
         expect(
             len(registrar.stream_to_observers[stream])
