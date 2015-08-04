@@ -1,4 +1,4 @@
-import queue
+from queue import Queue
 from functools import partial
 
 from doublex import Spy, Mock
@@ -39,7 +39,7 @@ with description('the threader module'):
     with it('should call the target function with the correct arguments'):
         stream = Mock()
         subject = Spy()
-        que = queue.Queue(maxsize=1)
+        que = Queue(maxsize=1)
 
         # Return a list with the stream and the observer fn
         target_function = lambda s, o: [s, o]
