@@ -2,13 +2,13 @@ import inspect
 
 from pysellus import integrations
 
-stream_to_observers = {}
+stream_to_testers = {}
 
 
 def register(function_list):
     for fn in function_list:
         fn()
-    return stream_to_observers
+    return stream_to_testers
 
 
 def expect(stream):
@@ -116,7 +116,7 @@ def register_tester_for_stream(stream, tester):
     If the given stream already has some functions mapped to it, add the given function to the list
 
     """
-    if stream in stream_to_observers.keys():
-        stream_to_observers[stream].append(tester)
+    if stream in stream_to_testers.keys():
+        stream_to_testers[stream].append(tester)
     else:
-        stream_to_observers[stream] = [tester]
+        stream_to_testers[stream] = [tester]

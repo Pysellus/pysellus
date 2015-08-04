@@ -29,7 +29,7 @@ with description('the registrar module'):
             expect(function).to_not(have_been_called)
 
         expect(
-            len(registrar.stream_to_observers[stream])
+            len(registrar.stream_to_testers[stream])
         ).to(equal(len(function_list)))
 
     with it('should merge multiple function lists if applied to the same stream'):
@@ -49,5 +49,5 @@ with description('the registrar module'):
         expect_(stream)(*second_function_list)
 
         expect(
-            len(registrar.stream_to_observers[stream])
+            len(registrar.stream_to_testers[stream])
         ).to(equal(len(first_function_list + second_function_list)))

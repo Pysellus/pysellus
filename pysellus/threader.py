@@ -7,13 +7,13 @@ def perform_subscribe(stream, observer):
     stream.subscribe(observer)
 
 
-def build_threads(stream_to_observers, thread_target=perform_subscribe):
+def build_threads(stream_to_testers, thread_target=perform_subscribe):
     threads = []
 
-    for stream, observers in stream_to_observers.items():
+    for stream, testers in stream_to_testers.items():
         subject = Subject()
-        for observer in observers:
-            subject.subscribe(observer)
+        for tester in testers:
+            subject.subscribe(tester)
 
         threads.append(make_thread(thread_target, stream, subject))
 
