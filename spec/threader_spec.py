@@ -85,14 +85,14 @@ with description('the threader module'):
         a_tester = Spy().a_tester
         another_tester = Spy().another_tester
 
-        streams_to_observers = {
+        stream_to_testers = {
             a_stream: [a_tester],
             another_stream: [a_tester, another_tester]
         }
 
-        threads = threader.build_threads(streams_to_observers)
+        threads = threader.build_threads(stream_to_testers)
 
         threader.launch_threads(threads)
 
-        for stream in streams_to_observers.keys():
+        for stream in stream_to_testers.keys():
             expect(stream.subscribe).to(have_been_called.once)
