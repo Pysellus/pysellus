@@ -7,10 +7,9 @@ from pysellus.registrar import expect as expect_
 
 with description('the registrar module'):
     with it('should call every function passed to it'):
-        spy = Spy()
         function_list = [
-            spy.a_function,
-            spy.another_function
+            Spy().a_function,
+            Spy().another_function
         ]
         registrar.register(function_list)
 
@@ -18,39 +17,37 @@ with description('the registrar module'):
             expect(function).to(have_been_called.once)
 
     with it('should add a function list to the dictionary of streams to functions'):
-        spy = Spy()
         stream = Mock()
         function_list = [
-            spy.a_function,
-            spy.another_function
+            Spy().a_function,
+            Spy().another_function
         ]
 
         expect_(stream)(*function_list)
 
         for function in function_list:
-            expect(function).to_not(have_been_called.once)
+            expect(function).to_not(have_been_called)
 
         expect(
-            len(registrar.stream_to_observers[stream])
+            len(registrar.stream_to_testers[stream])
         ).to(equal(len(function_list)))
 
-    with it('should merge n function lists if applied to the same stream'):
-        spy = Spy()
+    with it('should merge multiple function lists if applied to the same stream'):
         stream = Mock()
 
         first_function_list = [
-            spy.first_function,
-            spy.second_function
+            Spy().first_function,
+            Spy().second_function
         ]
 
         second_function_list = [
-            spy.third_function,
-            spy.fourth_function
+            Spy().third_function,
+            Spy().fourth_function
         ]
 
         expect_(stream)(*first_function_list)
         expect_(stream)(*second_function_list)
 
         expect(
-            len(registrar.stream_to_observers[stream])
+            len(registrar.stream_to_testers[stream])
         ).to(equal(len(first_function_list + second_function_list)))

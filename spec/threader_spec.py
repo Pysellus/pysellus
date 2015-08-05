@@ -15,14 +15,14 @@ with description('the threader module'):
         a_tester = Spy().a_tester
         another_tester = Spy().another_tester
 
-        streams_to_observers = {
+        stream_to_testers = {
             a_stream: [a_tester],
             another_stream: [a_tester, another_tester]
         }
 
-        threads = threader.build_threads(streams_to_observers)
+        threads = threader.build_threads(stream_to_testers)
 
-        expect(len(threads)).to(be(len(streams_to_observers)))
+        expect(len(threads)).to(be(len(stream_to_testers)))
 
     with it('should initialize threads by calling the given target function'):
         a_stream = Mock()
