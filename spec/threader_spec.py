@@ -12,12 +12,12 @@ with description('the threader module'):
         a_stream = Mock()
         another_stream = Mock()
 
-        a_function = Spy()
-        another_function = Spy()
+        a_tester = Spy().a_tester
+        another_tester = Spy().another_tester
 
         streams_to_observers = {
-            a_stream: [a_function],
-            another_stream: [a_function, another_function]
+            a_stream: [a_tester],
+            another_stream: [a_tester, another_tester]
         }
 
         threads = threader.build_threads(streams_to_observers)
@@ -25,11 +25,11 @@ with description('the threader module'):
         expect(len(threads)).to(be(len(streams_to_observers)))
 
     with it('should initialize threads by calling the given target function'):
-        stream = Mock()
-        subject = Spy()
+        a_stream = Mock()
+        a_subject = Spy()
         target_function = Spy().target_function
 
-        thread = threader.make_thread(target_function, stream, subject)
+        thread = threader.make_thread(target_function, a_stream, a_subject)
 
         thread.start()
         thread.join()
@@ -37,8 +37,8 @@ with description('the threader module'):
         expect(target_function).to(have_been_called.once)
 
     with it('should call the target function with the correct arguments'):
-        stream = Mock()
-        subject = Spy()
+        a_stream = Mock()
+        a_subject = Spy()
         queue = Queue(maxsize=1)
 
         # Return a list with the stream and the observer fn
@@ -52,7 +52,7 @@ with description('the threader module'):
         # as a parameter to make_thread
         target_partial = partial(target_wrapper, queue)
 
-        thread = threader.make_thread(target_partial, stream, subject)
+        thread = threader.make_thread(target_partial, a_stream, a_subject)
 
         thread.start()
         thread.join()
@@ -60,8 +60,8 @@ with description('the threader module'):
         result = queue.get()
         # result is [stream, observer]
 
-        expect(result[0]).to(be(stream))
-        expect(result[1]).to(be(subject))
+        expect(result[0]).to(be(a_stream))
+        expect(result[1]).to(be(a_subject))
 
     with it('should call `run` on every thread passed to the launch_threads function'):
         a_thread = Spy()
@@ -76,3 +76,23 @@ with description('the threader module'):
 
         for thread in threads:
             expect(thread.start).to(have_been_called.once)
+
+
+    with it('should call `subscribe` on each of the passed streams'):
+        a_stream = Spy()
+        another_stream = Spy()
+
+        a_tester = Spy().a_tester
+        another_tester = Spy().another_tester
+
+        stream_to_testers = {
+            a_stream: [a_tester],
+            another_stream: [a_tester, another_tester]
+        }
+
+        threads = threader.build_threads(stream_to_testers)
+
+        threader.launch_threads(threads)
+
+        for stream in stream_to_testers.keys():
+            expect(stream.subscribe).to(have_been_called.once)
