@@ -1,5 +1,7 @@
 import rx.subjects as subjects
 
+from pysellus.stock_integrations import terminal
+
 integrations = {}
 integrations_subject = {}
 
@@ -105,8 +107,7 @@ def _create(integration_name):
     """
     if integration_name == 'terminal':
         if integration_name not in integrations_subject:
-            integration_subject = subjects.Subject()
-            register_function_to_subject(integration_subject, print)
-            integrations_subject[integration_name] = integration_subject
+            terminal_integration = terminal.TerminalIntegration()
+            integrations_subject[integration_name] = terminal_integration.get_subject()
 
         return integrations_subject[integration_name]
