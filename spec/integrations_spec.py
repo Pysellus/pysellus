@@ -11,10 +11,10 @@ from pysellus.integrations import on_failure
 with description('the integrations module'):
     with context('exposes an `on_failure` decorator which'):
         with before.each:
-            integrations.integrations = {}
+            integrations.registered_integrations = {}
 
         with after.each:
-            integrations.integrations = {}
+            integrations.registered_integrations = {}
 
         with it('returns the decorated function as is'):
             decorated_function = Spy().decorated_function
@@ -33,8 +33,8 @@ with description('the integrations module'):
 
             on_failure('terminal')(decorated_function)
 
-            expect(list(integrations.integrations.keys())).to(contain_exactly(decorated_function.__name__))
+            expect(list(integrations.registered_integrations.keys())).to(contain_exactly(decorated_function.__name__))
 
-            for list_of_associated_subjects in integrations.integrations.values():
+            for list_of_associated_subjects in integrations.registered_integrations.values():
                 for subject in list_of_associated_subjects:
                     expect(subject).to(be_a(rx.subjects.Subject))

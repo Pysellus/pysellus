@@ -2,8 +2,11 @@ import rx.subjects as subjects
 
 from pysellus.stock_integrations import terminal
 
-integrations = {}
-integrations_subject = {}
+""" { test_name: [ registered_integrations ] } """
+registered_integrations = {}
+
+""" { integration_name: rx.subjects.Subject } """
+integration_to_subject = {}
 
 
 def on_failure(*integration_names):
@@ -28,7 +31,7 @@ def on_failure(*integration_names):
 
     """
     def decorator_of_setup_function(setup_function):
-        integrations[setup_function.__name__] = [
+        registered_integrations[setup_function.__name__] = [
             _get_integration(integration_name_)
             for integration_name_ in integration_names
         ]
@@ -44,14 +47,14 @@ def _get_integration(integration_name):
 
     Get the Subject object mapped to the given integration name
 
-    If it doesn't exist, create it (see create) and store it in integrations_subject,
+    If it doesn't exist, create it (see create) and store it in integration_to_subject,
     mapped against the given name {string: rx.Subject}
 
     """
-    if integration_name not in integrations_subject:
-        integrations_subject[integration_name] = _create(integration_name)
+    if integration_name not in integration_to_subject:
+        integration_to_subject[integration_name] = _create(integration_name)
 
-    return integrations_subject[integration_name]
+    return integration_to_subject[integration_name]
 
 
 # TODO: Search for the integration name somewhere and get the functions
@@ -68,11 +71,11 @@ def _create(integration_name):
 
     """
     if integration_name == 'terminal':
-        if integration_name not in integrations_subject:
+        if integration_name not in integration_to_subject:
             terminal_integration = terminal.TerminalIntegration()
-            integrations_subject[integration_name] = terminal_integration.get_subject()
+            integration_to_subject[integration_name] = terminal_integration.get_subject()
 
-        return integrations_subject[integration_name]
+        return integration_to_subject[integration_name]
 
 
 def notify_element(test_name, element_payload):
@@ -89,13 +92,13 @@ def _notify_integrations(test_name, message, error=False):
 
     Given a function name, and a Payload object, send the payload to the appropiate subject.
 
-    Check the function name in integrations and get all mapped subjects, and send the payload to
+    Check the function name in `registered_integrations` and get all mapped subjects, and send the payload to
     all of them.
 
     If the error flag is set to true, send the message as an error
 
     """
-    for integration in integrations[test_name]:
+    for integration in registered_integrations[test_name]:
         if error:
             integration.on_error(message)
         else:
