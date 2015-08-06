@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod
 
 from rx.subjects import Subject
 
+
 class AbstractIntegration(metaclass=ABCMeta):
     def __init__(self):
         self._subject = Subject()
@@ -14,7 +15,6 @@ class AbstractIntegration(metaclass=ABCMeta):
         )
 
         return self._subject
-
 
     @abstractmethod
     def on_next(self, element):
