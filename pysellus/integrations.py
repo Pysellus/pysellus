@@ -54,17 +54,6 @@ def _get_integration(integration_name):
     return integrations_subject[integration_name]
 
 
-def register_function_to_subject(subject, *functions):
-    """
-    register_function_to_subject :: rx.Subject -> [fn] -> IO
-
-    Given a subject, and a tuple of functions, subscribe all functions to the subject.
-
-    """
-    for fn in functions:
-        subject.subscribe(fn)
-
-
 def notify_element(test_name, element_payload):
     _notify_integrations(test_name, element_payload)
 
