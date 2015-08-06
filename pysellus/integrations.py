@@ -1,3 +1,5 @@
+import rx.subjects as subjects
+
 integrations = {}
 integrations_subject = {}
 
@@ -45,7 +47,7 @@ def _get_integration(integration_name):
 
     """
     if integration_name not in integrations_subject.keys():
-        integrations_subject[integration_name] = create(integration_name)
+        integrations_subject[integration_name] = _create(integration_name)
 
     return integrations_subject[integration_name]
 
@@ -89,7 +91,7 @@ def _notify_integration(test_name, message, error=False):
 
 
 # TODO: Search for the integration name somewhere and get the functions
-def create(integration_name):
+def _create(integration_name):
     """
     create :: String -> rx.Subject
 
@@ -101,4 +103,10 @@ def create(integration_name):
     so one can send a message to it without fear that the message will be lost
 
     """
-    pass
+    if integration_name == 'terminal':
+        if integration_name not in integrations_subject:
+            integration_subject = subjects.Subject()
+            register_function_to_subject(integration_subject, print)
+            integrations_subject[integration_name] = integration_subject
+
+        return integrations_subject[integration_name]
