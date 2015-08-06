@@ -48,7 +48,7 @@ def _get_integration(integration_name):
     mapped against the given name {string: rx.Subject}
 
     """
-    if integration_name not in integrations_subject.keys():
+    if integration_name not in integrations_subject:
         integrations_subject[integration_name] = _create(integration_name)
 
     return integrations_subject[integration_name]

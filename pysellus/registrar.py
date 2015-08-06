@@ -116,7 +116,7 @@ def register_tester_for_stream(stream, tester):
     If the given stream already has some functions mapped to it, add the given function to the list
 
     """
-    if stream in stream_to_testers.keys():
+    if stream in stream_to_testers:
         stream_to_testers[stream].append(tester)
     else:
         stream_to_testers[stream] = [tester]
