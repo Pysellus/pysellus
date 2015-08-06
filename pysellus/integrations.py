@@ -54,15 +54,25 @@ def _get_integration(integration_name):
     return integrations_subject[integration_name]
 
 
-def register_function_to_subject(subject, *functions):
+# TODO: Search for the integration name somewhere and get the functions
+def _create(integration_name):
     """
-    register_function_to_subject :: rx.Subject -> [fn] -> IO
+    create :: String -> rx.Subject
 
-    Given a subject, and a tuple of functions, subscribe all functions to the subject.
+    Given an integration name, create a new rx.Subject mapped to it
+
+    If a mapped subject already exists, return it.
+
+    In any case, the returned Subject has already been subscribed by all interested functions,
+    so one can send a message to it without fear that the message will be lost
 
     """
-    for fn in functions:
-        subject.subscribe(fn)
+    if integration_name == 'terminal':
+        if integration_name not in integrations_subject:
+            terminal_integration = terminal.TerminalIntegration()
+            integrations_subject[integration_name] = terminal_integration.get_subject()
+
+        return integrations_subject[integration_name]
 
 
 def notify_element(test_name, element_payload):
@@ -90,24 +100,3 @@ def _notify_integrations(test_name, message, error=False):
             integration.on_error(message)
         else:
             integration.on_next(message)
-
-
-# TODO: Search for the integration name somewhere and get the functions
-def _create(integration_name):
-    """
-    create :: String -> rx.Subject
-
-    Given an integration name, create a new rx.Subject mapped to it
-
-    If a mapped subject already exists, return it.
-
-    In any case, the returned Subject has already been subscribed by all interested functions,
-    so one can send a message to it without fear that the message will be lost
-
-    """
-    if integration_name == 'terminal':
-        if integration_name not in integrations_subject:
-            terminal_integration = terminal.TerminalIntegration()
-            integrations_subject[integration_name] = terminal_integration.get_subject()
-
-        return integrations_subject[integration_name]
