@@ -8,11 +8,11 @@ def load(path):
     if _is_python_file(path):
         sys.path.insert(0, os.path.dirname(path))
         module = import_module(_get_module_name_from_path(path))
-        return _get_checks_from_module(module)
+        return _get_setup_functions_from_module(module)
 
     functions = []
     for module in _get_modules(path):
-        functions += _get_checks_from_module(module)
+        functions += _get_setup_functions_from_module(module)
 
     return functions
 
@@ -21,7 +21,7 @@ def _get_module_name_from_path(path):
     return _remove_extension(path.split('/')[-1])
 
 
-def _get_checks_from_module(module):
+def _get_setup_functions_from_module(module):
     """
     Gets all setup functions from the given module.
     Setup functions are required to start with 'pscheck_'
