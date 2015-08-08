@@ -3,11 +3,11 @@ from rx.subjects import Subject
 from threading import Thread
 
 
-def perform_subscribe(stream, observer):
+def _perform_subscribe(stream, observer):
     stream.subscribe(observer)
 
 
-def build_threads(stream_to_testers, thread_target=perform_subscribe):
+def build_threads(stream_to_testers, thread_target=_perform_subscribe):
     threads = []
 
     for stream, testers in stream_to_testers.items():
@@ -15,12 +15,12 @@ def build_threads(stream_to_testers, thread_target=perform_subscribe):
         for tester in testers:
             subject.subscribe(tester)
 
-        threads.append(make_thread(thread_target, stream, subject))
+        threads.append(_make_thread(thread_target, stream, subject))
 
     return threads
 
 
-def make_thread(thread_target, stream, subject):
+def _make_thread(thread_target, stream, subject):
     return Thread(target=thread_target, args=(stream, subject))
 
 
