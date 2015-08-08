@@ -92,8 +92,8 @@ def _notify_integrations(test_name, message, error=False):
 
     Given a function name, and a Payload object, send the payload to the appropiate subject.
 
-    Check the function name in `registered_integrations` and get all mapped subjects, and send the payload to
-    all of them.
+    Check the function name in `registered_integrations` and get all mapped subjects,
+    and send the payload to all of them.
 
     If the error flag is set to true, send the message as an error
 
