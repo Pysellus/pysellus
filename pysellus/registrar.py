@@ -66,7 +66,7 @@ def expect(stream):
                         )
                     })
             # Save the wrapper, associated with the enclosing setup function
-            register_tester_for_stream(stream, tester_wrapper)
+            _register_tester_for_stream(stream, tester_wrapper)
 
     return tests_registrar
 
@@ -107,9 +107,9 @@ def _get_name_of_expect_caller():
     return inspect.stack()[distance_to_setup_function][3]
 
 
-def register_tester_for_stream(stream, tester):
+def _register_tester_for_stream(stream, tester):
     """
-    register_tester_for_stream :: rx.Observable -> fn -> IO
+    _register_tester_for_stream :: rx.Observable -> fn -> IO
 
     Given an Observable, and a tester function, map the Observable to a list of functions.
 

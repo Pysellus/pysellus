@@ -29,7 +29,7 @@ with description('the threader module'):
         a_subject = Spy()
         target_function = Spy().target_function
 
-        thread = threader.make_thread(target_function, a_stream, a_subject)
+        thread = threader._make_thread(target_function, a_stream, a_subject)
 
         thread.start()
         thread.join()
@@ -52,7 +52,7 @@ with description('the threader module'):
         # as a parameter to make_thread
         target_partial = partial(target_wrapper, queue)
 
-        thread = threader.make_thread(target_partial, a_stream, a_subject)
+        thread = threader._make_thread(target_partial, a_stream, a_subject)
 
         thread.start()
         thread.join()
