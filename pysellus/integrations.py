@@ -64,18 +64,15 @@ def _create(integration_name):
 
     Given an integration name, create a new rx.Subject mapped to it
 
-    If a mapped subject already exists, return it.
-
     In any case, the returned Subject has already been subscribed by all interested functions,
     so one can send a message to it without fear that the message will be lost
 
     """
+    subject = None
     if integration_name == 'terminal':
-        if integration_name not in integration_to_subject:
-            terminal_integration = terminal.TerminalIntegration()
-            integration_to_subject[integration_name] = terminal_integration.get_subject()
+        subject = terminal.TerminalIntegration().get_subject()
 
-        return integration_to_subject[integration_name]
+    return subject
 
 
 def notify_element(test_name, element_payload):
