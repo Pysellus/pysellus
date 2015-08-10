@@ -2,7 +2,7 @@
 
 import argparse
 
-from pysellus import loader, registrar, threader
+from pysellus import loader, registrar, threader, integration_config
 
 
 if __name__ == '__main__':
@@ -12,6 +12,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     directory = args.directory
+    integration_config.load_integrations(directory)
 
     threader.launch_threads(
         threader.build_threads(

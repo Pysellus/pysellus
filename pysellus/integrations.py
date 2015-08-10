@@ -1,6 +1,4 @@
-import rx.subjects as subjects
-
-from pysellus.stock_integrations import terminal
+from pysellus import integration_config
 
 """ { test_name: [ registered_integrations ] } """
 registered_integrations = {}
@@ -57,7 +55,6 @@ def _get_integration(integration_name):
     return integration_to_subject[integration_name]
 
 
-# TODO: Search for the integration name somewhere and get the functions
 def _create(integration_name):
     """
     create :: String -> rx.Subject
@@ -67,12 +64,16 @@ def _create(integration_name):
     In any case, the returned Subject has already been subscribed by all interested functions,
     so one can send a message to it without fear that the message will be lost
 
-    """
-    subject = None
-    if integration_name == 'terminal':
-        subject = terminal.TerminalIntegration().get_subject()
+    If no integration is found (KeyError), print an error and quit
 
-    return subject
+    """
+    try:
+        integration_instance = integration_config.loaded_integrations[integration_name]
+        return integration_instance.get_subject()
+    except KeyError as e:
+        print("The integration {} is used, but it's not declared,".format(e))
+        print("check that all integrations used are correctly declared in the configuration file")
+        exit(1)
 
 
 def notify_element(test_name, element_payload):
