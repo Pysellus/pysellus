@@ -40,31 +40,28 @@ def expect(stream):
             def tester_wrapper(element):
                 # NOTE: Note that `watch should implement this as `if tester(element)` instead
                 # NOTE: Also, the 'description' message should change
+                payload_message = _make_message_payload(test_name, element)
                 try:
                     if not tester(element):
-                        integrations.notify_element(test_name, {
-                            'test_name': test_name,
-                            'element': element,
-                            'description': 'Assert error: In {what}, got: {element}'.format(
+                        payload_message['description'] = \
+                            'Assert error: In {what}, got: {element}'.format(
                                 what=tester.__name__,
                                 element=element
                             )
-                        })
+                        integrations.notify_element(test_name, payload_message)
                 except Exception as e:
                     # In theory, no exception happening above could crash the application,
                     # so, again, in _theroy_, this should be safe.
 
                     # Catch any errors that could happen inside the tester, and send that to
                     # whoever is interested in the result
-
-                    integrations.notify_error(test_name, {
-                        'test_name': test_name,
-                        'element': element,
-                        'description': 'Exception in {what}: {cause}'.format(
+                    payload_message['description'] = \
+                        'Exception in {what}: {cause}'.format(
                             what=tester.__name__,
                             cause=e
                         )
-                    })
+                    integrations.notify_error(test_name, payload_message)
+
             # Save the wrapper, associated with the enclosing setup function
             _register_tester_for_stream(stream, tester_wrapper)
 
@@ -105,6 +102,22 @@ def _get_name_of_expect_caller():
     ]) - 1  # stack is 0-indexed
 
     return inspect.stack()[distance_to_setup_function][3]
+
+
+def _make_message_payload(test_name, element, description=''):
+    """
+    _make_message_payload :: String -> Any -> String -> {}
+
+    Create a message payload dictionary with the supplied arguments
+
+    The description could be None, if, for example, the user didn't want to send any
+
+    """
+    return {
+        'test_name': test_name,
+        'element': element,
+        'description': description
+    }
 
 
 def _register_tester_for_stream(stream, tester):
