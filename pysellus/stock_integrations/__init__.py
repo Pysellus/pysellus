@@ -1,6 +1,7 @@
-from pysellus.stock_integrations import terminal
+from pysellus.stock_integrations import terminal, slack
 
 integration_classes = {
-    'terminal': terminal.TerminalIntegration
+    'terminal': terminal.TerminalIntegration,
+    'slack': slack.SlackIntegration
     # ...
 }
