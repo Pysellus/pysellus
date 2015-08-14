@@ -1,4 +1,5 @@
 import inspect
+from functools import partial
 
 from pysellus import integrations
 
@@ -24,10 +25,10 @@ def expect(stream):
 
     def tests_registrar(*testers):
         """
-        tests_registrar :: [(Any -> Boolean)] -> IO
+        tests_registrar :: List (Any -> Boolean) -> IO
 
-        Given a function tuple, define a wrapper around it, and map it agains the original stream
-        given to expect.
+        Given a function tuple, define a wrapper around it
+        and map it against the original stream given to expect.
 
         For each function in the tuple, define a wrapper around it.
         This wrapper function takes an element (Any) and gives it to the original function.
@@ -37,35 +38,46 @@ def expect(stream):
 
         """
         for tester in testers:
-            def tester_wrapper(element):
-                # NOTE: Note that `watch should implement this as `if tester(element)` instead
-                # NOTE: Also, the 'description' message should change
-                payload_message = _make_message_payload(test_name, element)
-                try:
-                    if not tester(element):
-                        payload_message['description'] = \
-                            'Assert error: In {what}, got: {element}'.format(
-                                what=tester.__name__,
-                                element=element
-                            )
-                        integrations.notify_element(test_name, payload_message)
-                except Exception as e:
-                    # In theory, no exception happening above could crash the application,
-                    # so, again, in _theroy_, this should be safe.
-
-                    # Catch any errors that could happen inside the tester, and send that to
-                    # whoever is interested in the result
-                    payload_message['description'] = \
-                        'Exception in {what}: {cause}'.format(
-                            what=tester.__name__,
-                            cause=e
-                        )
-                    integrations.notify_error(test_name, payload_message)
-
-            # Save the wrapper, associated with the enclosing setup function
-            _register_tester_for_stream(stream, tester_wrapper)
+            _register_tester_for_stream(
+                stream,
+                partial(_on_failure_wrapper, tester, test_name)
+            )
 
     return tests_registrar
+
+
+def _on_failure_wrapper(tester, test_name, element):
+    """
+    Given a tester, a test name, and an element, wrap the tester call
+    with the given element in a try-except block. Whenever the test fails,
+    or an exception occurs, notify the assigned subject of it, including
+    the test name where it failed.
+
+    TODO: Add _on_match_wrapper, like `if tester(element)`
+          Also, the description of the payload message should change
+
+    """
+    payload_message = _make_message_payload(test_name, element)
+    try:
+        if not tester(element):
+            payload_message['description'] = \
+                'Assert error: In {what}, got: {element}'.format(
+                    what=tester.__name__,
+                    element=element
+                )
+            integrations.notify_element(test_name, payload_message)
+    except Exception as e:
+        # In theory, no exception happening above could crash the application,
+        # so, again, in _theory_, this should be safe.
+
+        # Catch any errors that could happen inside the tester, and send that to
+        # whoever is interested in the result
+        payload_message['description'] = \
+            'Exception in {what}: {cause}'.format(
+                what=tester.__name__,
+                cause=e
+            )
+        integrations.notify_error(test_name, payload_message)
 
 
 def _get_name_of_expect_caller():
