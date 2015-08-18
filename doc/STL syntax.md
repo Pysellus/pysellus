@@ -1,6 +1,6 @@
 # STL - Stream Testing Language
 
-STL is just a DSL on top of Python 3 and its usage is completely optional. If you want to write your tests directly in Python, head over to the [Python syntax]() section.
+STL is just a DSL on top of Python 3 and its usage is completely optional. If you want to write your tests directly in Python, head over to the [Python syntax](./Python\ Test\ Syntax.md) section.
 
 ---
 
@@ -58,7 +58,7 @@ def is_odd(n):
 odd = input.filter(is_odd)
 # => 1, 3, 5..., 99
 
-even = even.map(lambda x: x - 1)
+even = odd.map(lambda x: x - 1)
 # => 0, 2, 3..., 98
 
 original_input = odd.merge(even)

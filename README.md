@@ -75,10 +75,11 @@ You can read about the full STL syntax in the official [documentation](./doc/STL
 ### Documentation
 
 - [User Guide]()
-- [Adding your own API]()
 - [STL Syntax](./doc/STL\ syntax.md)
-- [Python Syntax]()
+- [Python Syntax](./doc/Python\ Test\ Syntax.md)
+- [Adding your own API]()
 - [Custom Integrations]()
+- [Notification Protocol]()
 
 ### Contributing
 
