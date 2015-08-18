@@ -6,5 +6,8 @@ def another_helper_function():
     pass
 
 
-def pscheck_function():
+def function():
     pass
+
+function.is_setup_function = True
+
