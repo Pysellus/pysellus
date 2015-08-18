@@ -40,15 +40,15 @@ def expect(stream):
         for tester in testers:
             _register_tester_for_stream(
                 stream,
-                partial(_on_failure_wrapper, tester, test_name)
+                partial(_on_failure_wrapper, test_name, tester)
             )
 
     return tests_registrar
 
 
-def _on_failure_wrapper(tester, test_name, element):
+def _on_failure_wrapper(test_name, tester, element):
     """
-    Given a tester, a test name, and an element, wrap the tester call
+    Given a test name, a tester, and an element, wrap the tester call
     with the given element in a try-except block. Whenever the test fails,
     or an exception occurs, notify the assigned subject of it, including
     the test name where it failed.
@@ -57,14 +57,9 @@ def _on_failure_wrapper(tester, test_name, element):
           Also, the description of the payload message should change
 
     """
-    payload_message = _make_message_payload(test_name, element)
+    payload_message = _make_message_payload(test_name, tester.__name__, element)
     try:
         if not tester(element):
-            payload_message['description'] = \
-                'Assert error: In {what}, got: {element}'.format(
-                    what=tester.__name__,
-                    element=element
-                )
             integrations.notify_element(test_name, payload_message)
     except Exception as e:
         # In theory, no exception happening above could crash the application,
@@ -72,11 +67,7 @@ def _on_failure_wrapper(tester, test_name, element):
 
         # Catch any errors that could happen inside the tester, and send that to
         # whoever is interested in the result
-        payload_message['description'] = \
-            'Exception in {what}: {cause}'.format(
-                what=tester.__name__,
-                cause=e
-            )
+        payload_message['error'] = e
         integrations.notify_error(test_name, payload_message)
 
 
@@ -116,19 +107,17 @@ def _get_name_of_expect_caller():
     return inspect.stack()[distance_to_setup_function][3]
 
 
-def _make_message_payload(test_name, element, description=''):
+def _make_message_payload(test_name, tester_name, element):
     """
-    _make_message_payload :: String -> Any -> String -> {}
+    _make_message_payload :: String -> String -> Any -> {}
 
     Create a message payload dictionary with the supplied arguments
-
-    The description could be None, if, for example, the user didn't want to send any
 
     """
     return {
         'test_name': test_name,
-        'element': element,
-        'description': description
+        'expect_function': tester_name,
+        'element': element
     }
 
 
