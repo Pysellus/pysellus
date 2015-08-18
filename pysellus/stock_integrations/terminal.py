@@ -1,12 +1,24 @@
+import pprint
+
 from pysellus.interfaces import AbstractIntegration
 
 
 class TerminalIntegration(AbstractIntegration):
-    def on_next(self, element):
-        print("Received => {}".format(element))
+    def on_next(self, message):
+        print('Assert error: in {test_name} -> {1}'.format(
+            message['test_name'],
+            message['expect_function']
+        ))
+        print('Got:')
+        pprint.pprint(message['element'])
 
-    def on_error(self, error):
-        print("Error! On: {}".format(error))
+    def on_error(self, error_message):
+        print('Runtime Error: In {0} -> {1}'.format(
+            error_message['test_name'],
+            error_message['expect_function']
+        ))
+        print('Got:')
+        pprint.pprint(error_message['error'])
 
     def on_completed(self):
-        print("Stream completed!")
+        print("All tests done.")
