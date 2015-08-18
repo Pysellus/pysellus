@@ -27,9 +27,9 @@ def _get_setup_functions_from_module(module):
     Setup functions are required to start with 'pscheck_'
     """
     functions = []
-    for name in dir(module):
-        value = getattr(module, name)
-        if isfunction(value) and name.startswith('pscheck_'):
+    for entry in dir(module):
+        value = getattr(module, entry)
+        if isfunction(value) and hasattr(value, 'is_setup_function'):
             functions.append(value)
     return functions
 

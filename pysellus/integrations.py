@@ -29,6 +29,7 @@ def on_failure(*integration_names):
 
     """
     def decorator_of_setup_function(setup_function):
+        _mark_as_setup_function(setup_function)
         registered_integrations[setup_function.__name__] = [
             _get_integration(integration_name_)
             for integration_name_ in integration_names
@@ -37,6 +38,10 @@ def on_failure(*integration_names):
         return setup_function
 
     return decorator_of_setup_function
+
+
+def _mark_as_setup_function(function):
+    function.is_setup_function = True
 
 
 def _get_integration(integration_name):
