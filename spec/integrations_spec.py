@@ -44,6 +44,7 @@ with description('the integrations module'):
 
             expect(list(integrations.registered_integrations.keys())).to(contain_exactly(decorated_function.__name__))
 
-            for list_of_associated_subjects in integrations.registered_integrations.values():
-                for subject in list_of_associated_subjects:
+            for setup_function in integrations.registered_integrations:
+                for subject in integrations.registered_integrations[setup_function]['integrations']:
                     expect(subject).to(be_a(rx.subjects.Subject))
+

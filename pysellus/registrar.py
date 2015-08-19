@@ -57,7 +57,12 @@ def _on_failure_wrapper(test_name, tester, element):
           Also, the description of the payload message should change
 
     """
-    payload_message = _make_message_payload(test_name, tester.__name__, element)
+
+    payload_message = _make_message_payload(
+        integrations.registered_integrations[test_name]['original_name'],
+        tester.__name__,
+        element
+    )
     try:
         if not tester(element):
             integrations.notify_element(test_name, payload_message)
