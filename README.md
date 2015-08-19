@@ -66,11 +66,16 @@ Assert error: In all numbers should be positive, got: 0
 
 In the previous example, you wrote your tests in STL, or _Stream Testing Language_. This is just a thin DSL layer over regular Python, and its usage is completely optional.
 
-You can read about the full STL syntax in the official [documentation](./doc/STL\ syntax.md).
+You can read about the full STL syntax in the official [documentation](./doc/STL\ syntax.md), or learn how to write your tests in [regular Python](./doc/Python\ Test\ Syntax.md).
 
 ### Usage
 
-...
+**Pysellus** is installed as a command-line application. To use it, just call `pyselus`, passing either your test directory or file path.
+
+```
+$ pysellus [-d|--dir] /path/to/test/dir,
+           [-f|--file] /path/to/test/file
+```
 
 ### Documentation
 
@@ -83,7 +88,7 @@ You can read about the full STL syntax in the official [documentation](./doc/STL
 
 ### Contributing
 
-Contributors are welcome. Please fork the repository and send a pull request to the master branch.
+Contributors are welcome. Please fork the repository and send a pull request to the `master` branch.
 
 Additionally, you can read the [contributors](./CONTRIBUTING.md) file.
 
