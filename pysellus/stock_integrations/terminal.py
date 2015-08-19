@@ -5,7 +5,7 @@ from pysellus.interfaces import AbstractIntegration
 
 class TerminalIntegration(AbstractIntegration):
     def on_next(self, message):
-        print('Assert error: in {test_name} -> {1}'.format(
+        print('Assert error: in {0} -> {1}'.format(
             message['test_name'],
             message['expect_function']
         ))
