@@ -79,18 +79,18 @@ $ pysellus [-d|--dir] /path/to/test/dir,
 
 ### Documentation
 
-- [User Guide]()
+- [User Guide](.) - In Progress
 - [STL Syntax](./doc/STL\ syntax.md)
 - [Python Syntax](./doc/Python\ Test\ Syntax.md)
-- [Adding your own API]()
-- [Custom Integrations]()
-- [Notification Protocol]()
+- [Adding your own API](.) - In Progress
+- [Custom Integrations](.) - In Progress
+- [Notification Protocol](.) - In Progress
 
 ### Contributing
 
 Contributors are welcome. Please fork the repository and send a pull request to the `master` branch.
 
-Additionally, you can read the [contributors](./CONTRIBUTING.md) file.
+Additionally, you can read the [*Contributing*](./CONTRIBUTING.md) file.
 
 ## License
 
