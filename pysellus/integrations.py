@@ -5,7 +5,7 @@ from pysellus import integration_config
 """
 {
     test_name: {
-        original_name: String,
+        test_description: String,
         integrations: [ registered_integrations ]
     }
 }
@@ -41,7 +41,7 @@ def on_failure(*integration_names):
         _mark_as_setup_function(setup_function)
 
         registered_integrations[setup_function.__name__] = {
-            'original_name': _get_test_description(setup_function),
+            'test_description': _get_test_description(setup_function),
             'integrations': [
                 _get_integration(integration_name_)
                 for integration_name_ in integration_names
