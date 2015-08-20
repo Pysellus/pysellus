@@ -4,17 +4,16 @@ from rx.subjects import Subject
 
 
 class AbstractIntegration(metaclass=ABCMeta):
-    def __init__(self):
-        self._subject = Subject()
-
     def get_subject(self):
-        self._subject.subscribe(
+        subject = Subject()
+
+        subject.subscribe(
             self.on_next,
             self.on_error,
             self.on_completed
         )
 
-        return self._subject
+        return subject
 
     @abstractmethod
     def on_next(self, element):

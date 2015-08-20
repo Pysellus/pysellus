@@ -11,8 +11,6 @@ class SlackIntegration(AbstractIntegration):
         if self._channel:
             self._payload['channel'] = self._channel
 
-        super().__init__()
-
     def on_next(self, element):
         self._compose_on_next_message(element)
         requests.post(self._url, json=self._payload)
