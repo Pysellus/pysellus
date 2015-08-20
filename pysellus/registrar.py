@@ -59,7 +59,7 @@ def _on_failure_wrapper(test_name, tester, element):
     """
 
     payload_message = _make_message_payload(
-        integrations.registered_integrations[test_name]['original_name'],
+        integrations.registered_integrations[test_name]['test_description'],
         tester.__name__,
         element
     )
