@@ -12,18 +12,22 @@ If you have git-scm installed, you now clone your git repo using the following c
 $ git clone git@github.com:<my-github-name>/pysellus.git
 ```
 
-## Installing Pysellus
+## Installing Pysellus for development
 
-Following the installation instructions from the Readme, you can do either:
+We recomment using [virtualenv](https://virtualenv.pypa.io/en/latest/).
 
-```
-$ pip3 install pysellus
-```
-
-or:
+First, clone the repo and `cd` into it. Once you've done that, initialize and enter your virtualenv:
 
 ```
-$ python3 setup.py install
+$ virtualenv -p $(which python3) env
+$ source env/bin/activate
+```
+
+Then, install `pysellus` locally:
+
+```
+$ pip install -r requirements.txt -r requirements-dev.txt
+$ python setup.py develop
 ```
 
 If you have any difficulties, don't hesitate in opening an issue in the [issue tracker][issue-tracker].
