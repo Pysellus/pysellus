@@ -29,7 +29,7 @@ You can get Pysellus just by running:
 $ pip3 install pysellus
 ```
 
-Or you can go ahead and clone this repo, and install it
+Or you can go ahead and clone this repo, and install it (needs [setuptools](https://pypi.python.org/pypi/setuptools))
 
 ```
 $ python3 setup.py install
