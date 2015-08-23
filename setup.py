@@ -29,7 +29,9 @@ setup(
         # -*- Extra requirements: -*-
         i.strip() for i in open('requirements.txt').readlines()
     ],
-    entry_points='''
-    # -*- Entry points: -*-
-    ''',
+    entry_points={
+        'console_scripts': [
+            'pysellus = pysellus.core:main'
+        ],
+    },
 )
