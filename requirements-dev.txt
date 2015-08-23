@@ -4,5 +4,4 @@ expects
 doublex
 doublex-expects
 python-coveralls
-PyYAML
 requests

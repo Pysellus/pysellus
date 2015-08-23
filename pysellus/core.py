@@ -4,8 +4,7 @@ import argparse
 
 from pysellus import loader, registrar, threader, integration_config
 
-
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('directory', type=str,
                         metavar='expanded files directory', help='directory of the expanded files')
@@ -19,3 +18,7 @@ if __name__ == '__main__':
             registrar.register(loader.load(directory))
         )
     )
+
+
+if __name__ == '__main__':
+    main()
