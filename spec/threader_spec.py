@@ -77,7 +77,6 @@ with description('the threader module'):
         for thread in threads:
             expect(thread.start).to(have_been_called.once)
 
-
     with it('should call `subscribe` on each of the passed streams'):
         a_stream = Spy()
         another_stream = Spy()

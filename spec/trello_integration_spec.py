@@ -13,13 +13,17 @@ with description('the Trello integration'):
             def attempt_to_instantiate_without_api_key():
                 trello.TrelloIntegration(token='a_token')
 
-            expect(attempt_to_instantiate_without_api_key).to(raise_error(TypeError, match('missing.+key')))
+            expect(attempt_to_instantiate_without_api_key).to(
+                raise_error(TypeError, match('missing.+key'))
+            )
 
         with it('user token'):
             def attempt_to_instantiate_without_token():
                 trello.TrelloIntegration(key='an_api_key')
 
-            expect(attempt_to_instantiate_without_token).to(raise_error(TypeError, match('missing.+token')))
+            expect(attempt_to_instantiate_without_token).to(
+                raise_error(TypeError, match('missing.+token'))
+            )
 
     with description('offers two notification modes'):
         with description('by card'):
@@ -37,25 +41,29 @@ with description('the Trello integration'):
             with description('requires the following arguments to be passed to the constructor:'):
                 with it('a card id'):
                     def attempt_to_instantiate_in_card_mode_without_card_id():
-                        integration = trello.TrelloIntegration(
+                        trello.TrelloIntegration(
                             key='an_api_key',
                             token='a_token',
                             mode='card',
                             checklist='some_checklist_id'
                         )
 
-                    expect(attempt_to_instantiate_in_card_mode_without_card_id).to(raise_error(TypeError, match('missing.+card')))
+                    expect(attempt_to_instantiate_in_card_mode_without_card_id).to(
+                        raise_error(TypeError, match('missing.+card'))
+                    )
 
                 with it('a checklist id'):
                     def attempt_to_instantiate_in_card_mode_without_checklist_id():
-                        integration = trello.TrelloIntegration(
+                        trello.TrelloIntegration(
                             key='an_api_key',
                             token='a_token',
                             mode='card',
                             card='some_card_id'
                         )
 
-                    expect(attempt_to_instantiate_in_card_mode_without_checklist_id).to(raise_error(TypeError, match('missing.+checklist')))
+                    expect(attempt_to_instantiate_in_card_mode_without_checklist_id).to(
+                        raise_error(TypeError, match('missing.+checklist'))
+                    )
 
             with description('is implemented in the ByCardNotification class'):
                 with before.each:
@@ -97,13 +105,15 @@ with description('the Trello integration'):
             with description('requires more arguments to be passed to the constructor:'):
                 with it('a list id'):
                     def attempt_to_instantiate_in_list_mode_without_list_id():
-                        integration = trello.TrelloIntegration(
+                        trello.TrelloIntegration(
                             key='an_api_key',
                             token='a_token',
                             mode='list'
                         )
 
-                    expect(attempt_to_instantiate_in_list_mode_without_list_id).to(raise_error(TypeError, match('missing.+list')))
+                    expect(attempt_to_instantiate_in_list_mode_without_list_id).to(
+                        raise_error(TypeError, match('missing.+list'))
+                    )
 
             with description('is implemented in the ByListNotification class'):
                 with before.each:
@@ -243,7 +253,6 @@ with description('the Formatter transforms notified elements into notification m
         with it('includes the test name in the title'):
             created_title = self.element_message['title']
             expect(created_title).to(match(self.some_element_to_notify_of['test_name']))
-
 
         with it('includes the element which was tested in the content'):
             created_content = self.element_message['content']

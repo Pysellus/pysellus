@@ -10,4 +10,3 @@ def function():
     pass
 
 function.is_setup_function = True
-
