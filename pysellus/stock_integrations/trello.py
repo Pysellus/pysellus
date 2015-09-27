@@ -4,11 +4,16 @@ import requests
 
 from pysellus.interfaces import AbstractIntegration
 
+
 class TrelloIntegration(AbstractIntegration):
     def __init__(self, key, token, mode=None, trello_api_client=None, formatter=None, **kwargs):
-        self.notification      = self._get_notification_class_from_mode(mode)(**kwargs)
-        self.trello_api_client = trello_api_client if trello_api_client is not None else TrelloAPI(key, token)
-        self.formatter         = formatter         if formatter         is not None else Formatter
+        self.notification = self._get_notification_class_from_mode(mode)(**kwargs)
+
+        self.trello_api_client = trello_api_client if trello_api_client is not None else TrelloAPI(
+            key, token
+        )
+
+        self.formatter = formatter if formatter is not None else Formatter
 
     def _get_notification_class_from_mode(self, mode):
         return notifications.get(mode, ByCardNotification)
@@ -33,17 +38,17 @@ class TrelloIntegration(AbstractIntegration):
 
 class ByCardNotification:
     def __init__(self, card, checklist):
-        self.card_id      = card
+        self.card_id = card
         self.checklist_id = checklist
 
     @property
     def endpoint(self):
-        return '/'.join([ 'cards', self.card_id, 'checklist', self.checklist_id, 'checkItem' ])
+        return '/'.join(['cards', self.card_id, 'checklist', self.checklist_id, 'checkItem'])
 
     def assemble_body(self, title, content):
         return {
             'idChecklist': self.checklist_id,
-            'name':        title + ': ' + content
+            'name': title + ': ' + content
         }
 
 
@@ -53,7 +58,7 @@ class ByListNotification:
 
     @property
     def endpoint(self):
-        return '/'.join([ 'lists', self.list_id, 'cards' ])
+        return '/'.join(['lists', self.list_id, 'cards'])
 
     def assemble_body(self, title, content):
         return {
@@ -72,7 +77,7 @@ class Formatter:
     @staticmethod
     def create_element_message(element):
         return {
-            'title':   element['test_name'],
+            'title': element['test_name'],
             'content': markdown_quote(json.dumps(element['element']))
         }
 
@@ -95,7 +100,7 @@ class Formatter:
     @staticmethod
     def create_completion_message(completion_phrase):
         return {
-            'title':   completion_phrase,
+            'title': completion_phrase,
             'content': ''
         }
 
@@ -103,8 +108,10 @@ class Formatter:
 def markdown_quote(a_string):
     return enclose(a_string, '`')
 
+
 def enclose(a_string, delimiter):
     return delimiter + a_string + delimiter
+
 
 def markdown_bold(a_string):
     return enclose(a_string, '**')
@@ -115,22 +122,22 @@ class TrelloAPI:
     BASE_URL = 'https://trello.com/1/'
 
     def __init__(self, key, token, http_client=requests):
-        self._api_key   = key
+        self._api_key = key
         self._api_token = token
 
         self._http_client = http_client
 
     def post(self, endpoint, body):
         self._http_client.post(
-             url=TrelloAPI.BASE_URL + endpoint,
-             params=self._query_parameters,
-             json=self._cap_body(body)
+            url=TrelloAPI.BASE_URL + endpoint,
+            params=self._query_parameters,
+            json=self._cap_body(body)
         )
 
     @property
     def _query_parameters(self):
         return {
-            'key':   self._api_key,
+            'key': self._api_key,
             'token': self._api_token
         }
 

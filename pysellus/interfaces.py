@@ -24,4 +24,3 @@ class AbstractIntegration(metaclass=ABCMeta):
 
     def on_completed(self):
         pass
-
