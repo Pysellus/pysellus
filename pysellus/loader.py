@@ -24,7 +24,9 @@ def _get_module_name_from_path(path):
 def _get_setup_functions_from_module(module):
     """
     Gets all setup functions from the given module.
-    Setup functions are required to start with 'pscheck_'
+    All setup functions have the 'is_setup_function' attribute
+
+    See integrations#on_failure
     """
     functions = []
     for entry in dir(module):
