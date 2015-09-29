@@ -27,7 +27,7 @@ notify:
             attrn: valn
 ```
 
-Here, we are defining an `integration_name` integration, with an alias of `user_alias`, and configuring it with `n` attributes and values. Your aliases must be unique across all declared integratoins.
+Here, we are defining an `integration_name` integration, with an alias of `user_alias`, and configuring it with `n` attributes and values. Your aliases must be unique across all declared integrations.
 
 #### [Slack][slack-url]
 
@@ -50,8 +50,45 @@ notify:
 
 Obviously, you can give it whatever name you want.
 
-#### Trello
+#### [Trello][trello-url]
 
-...
+The [Trello][trello-url] integration notifies you in your [Trello][trello-url] board of choice.
+
+It uses [Trello][trello-url]'s official [API](http://developers.trello.com/), so you will need to generate an [application key](https://trello.com/app-key) for your **Pysellus** instance as well as an [authentication token](http://developers.trello.com/authorize) with write permissions.
+
+It supports two modes of notification:
+
+##### By card
+
+Sends all notifications into a single card, appending them as items of the checklist which you specify.
+
+You configure it like this:
+
+```yaml
+notify:
+    'my-trello-alias':
+        trello:
+            key: 'your-application-key'
+            token: 'your-authorization-token'
+            card: 'the-id-of-your-card'
+            checklist: 'the-id-of-your-checklist'
+```
+
+
+##### By list
+
+Sends all notifications into a single list, creating one new card per notified item.
+
+You configure it like this:
+
+```yaml
+notify:
+    'my-trello-alias':
+        trello:
+            key: 'your-application-key'
+            token: 'your-authorization-token'
+            list: 'the-id-of-your-list'
+```
 
 [slack-url]:  https://slack.com
+[trello-url]: https://trello.com/
