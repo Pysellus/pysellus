@@ -82,6 +82,7 @@ $ pysellus [-d|--dir] /path/to/test/dir,
 - [User Guide](.) - In Progress
 - [STL Syntax](./doc/STL\ syntax.md)
 - [Python Syntax](./doc/Python\ Test\ Syntax.md)
+- [Integrations](./doc/Integrations.md)
 - [Adding your own API](.) - In Progress
 - [Custom Integrations](.) - In Progress
 - [Notification Protocol](.) - In Progress
