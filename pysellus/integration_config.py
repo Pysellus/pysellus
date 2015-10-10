@@ -17,18 +17,15 @@ def load_integrations(path):
 
     Given a path, find the config file at it and load it.
     """
-    integrations_configuration = _load_integration_config_file(path)
+    configuration = _load_config_file(path)
+    integrations_configuration = configuration['notify']
 
-    declared_integrations = integrations_configuration['notify']
-
-    for alias, configuration in declared_integrations.items():
-        instance = _get_integration_instance(configuration)
-        loaded_integrations[alias] = instance
+    _load_integrations_from_configuration(integrations_configuration)
 
 
-def _load_integration_config_file(path):
+def _load_config_file(path):
     """
-    _load_integration_config_file :: String -> {}
+    _load_config_file :: String -> {}
 
     Given a directory, loads the configuration file.
     If given a file, it will try to get the configuration from the
@@ -48,7 +45,16 @@ def _load_integration_config_file(path):
         return yaml.load(config_file)
 
 
-def _get_integration_instance(integration_configuration):
+def _load_integrations_from_configuration(integrations_configuration):
+    for alias, configuration in integrations_configuration.items():
+        integration_name = list(configuration.keys())[0]
+        integration_configuration = configuration[integration_name]
+
+        instance = _get_integration_instance(integration_name, integration_configuration)
+        loaded_integrations[alias] = instance
+
+
+def _get_integration_instance(name, configuration):
     """
     _get_integration_instance :: {} -> AbstractIntegration
 
@@ -57,14 +63,13 @@ def _get_integration_instance(integration_configuration):
     name, and return an instance of it, passing it all the parameters in the
     parameter dictionary.
     """
-    integration_name = list(integration_configuration.keys())[0]
     try:
-        integration_class = integration_classes[integration_name]
-    except KeyError as e:
-        print("The integration {} does not exist\nAborting...".format(e))
+        integration_class = integration_classes[name]
+    except KeyError:
+        print("The '{}' integration does not exist\nAborting...".format(name))
         exit(1)
 
-    kwargs_for_integration_constructor = integration_configuration.values()
+    kwargs_for_integration_constructor = configuration.values()
     if kwargs_for_integration_constructor:
         return integration_class(**kwargs_for_integration_constructor)
     else:
