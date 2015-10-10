@@ -25,8 +25,6 @@ def load_integrations(path):
         instance = _get_integration_instance(configuration)
         loaded_integrations[alias] = instance
 
-    print(loaded_integrations)
-
 
 def _load_integration_config_file(path):
     """
