@@ -1,7 +1,7 @@
 import re
 import json
 
-from expects import expect, raise_error, match, be_a, equal, have_key
+from expects import expect, raise_error, match, be_a, equal, have_keys
 from doublex import Spy, Mock, Stub, ANY_ARG
 from doublex_expects import have_been_called, have_been_called_with, have_been_satisfied
 
@@ -81,8 +81,7 @@ with description('the Trello integration'):
 
                     assembled_body = self.card_wise_notification.assemble_body(**a_notification_message)
 
-                    for required_key in [ 'idChecklist', 'name' ]:
-                        expect(assembled_body).to(have_key(required_key))
+                    expect(assembled_body).to(have_keys('idChecklist', 'name'))
 
         with description('by list'):
             with it("is selected by passing mode='list'"):
@@ -128,8 +127,7 @@ with description('the Trello integration'):
 
                     assembled_body = self.list_wise_notification.assemble_body(**a_notification_message)
 
-                    for required_key in [ 'name', 'desc' ]:
-                        expect(assembled_body).to(have_key(required_key))
+                    expect(assembled_body).to(have_keys('name', 'desc'))
 
     with it('defaults to card-wise notification'):
         integration = trello.TrelloIntegration(
