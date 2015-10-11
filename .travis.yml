@@ -3,5 +3,5 @@ python:
   - "3.4"
 install: "pip install -r requirements.txt -r requirements-dev.txt"
 before_script: python setup.py develop
-script: mamba --enable-coverage
+script: flake8 && mamba --enable-coverage
 after_success: coveralls

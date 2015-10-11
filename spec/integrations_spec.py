@@ -42,9 +42,10 @@ with description('the integrations module'):
 
             on_failure('some_integration')(decorated_function)
 
-            expect(list(integrations.registered_integrations.keys())).to(contain_exactly(decorated_function.__name__))
+            expect(list(integrations.registered_integrations.keys())).to(
+                contain_exactly(decorated_function.__name__)
+            )
 
             for setup_function in integrations.registered_integrations:
                 for subject in integrations.registered_integrations[setup_function]['integrations']:
                     expect(subject).to(be_a(rx.subjects.Subject))
-
