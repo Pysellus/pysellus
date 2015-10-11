@@ -46,15 +46,35 @@ def _load_config_file(path):
 
 
 def _load_integrations_from_configuration(integrations_configuration):
-    for alias, configuration in integrations_configuration.items():
-        integration_name = list(configuration.keys())[0]
-        integration_configuration = configuration[integration_name]
+    for alias, integration_name, kwargs_for_integration_constructor \
+        in unpack_integration_configuration_data(integrations_configuration):
+            loaded_integrations[alias] = _get_integration_instance(
+                integration_name,
+                kwargs_for_integration_constructor
+            )
 
-        instance = _get_integration_instance(integration_name, integration_configuration)
-        loaded_integrations[alias] = instance
+
+def unpack_integration_configuration_data(integrations_configuration):
+    for alias, child in integrations_configuration.items():
+        if _has_only_one_key_and_a_dict_as_value(child):
+            integration_name = _get_the_only_key_in(child)
+            kwargs_for_integration_constructor = child[integration_name]
+        else:
+            integration_name = alias
+            kwargs_for_integration_constructor = child
+
+        yield (alias, integration_name, kwargs_for_integration_constructor)
 
 
-def _get_integration_instance(name, configuration):
+def _has_only_one_key_and_a_dict_as_value(a_dict):
+    return len(a_dict.keys()) == 1 and type(a_dict[_get_the_only_key_in(a_dict)]) is dict
+
+
+def _get_the_only_key_in(a_dict):
+    return list(a_dict.keys())[0]
+
+
+def _get_integration_instance(name, kwargs_for_integration_constructor):
     """
     _get_integration_instance :: {} -> AbstractIntegration
 
@@ -69,8 +89,4 @@ def _get_integration_instance(name, configuration):
         print("The '{}' integration does not exist\nAborting...".format(name))
         exit(1)
 
-    kwargs_for_integration_constructor = configuration.values()
-    if kwargs_for_integration_constructor:
-        return integration_class(**kwargs_for_integration_constructor)
-    else:
-        return integration_class()
+    return integration_class(**kwargs_for_integration_constructor)
