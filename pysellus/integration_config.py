@@ -17,20 +17,15 @@ def load_integrations(path):
 
     Given a path, find the config file at it and load it.
     """
-    integrations_configuration = _load_integration_config_file(path)
+    configuration = _load_config_file(path)
+    integrations_configuration = configuration['notify']
 
-    declared_integrations = integrations_configuration['notify']
-
-    for alias, configuration in declared_integrations.items():
-        instance = _get_integration_instance(configuration)
-        loaded_integrations[alias] = instance
-
-    print(loaded_integrations)
+    _load_integrations_from_configuration(integrations_configuration)
 
 
-def _load_integration_config_file(path):
+def _load_config_file(path):
     """
-    _load_integration_config_file :: String -> {}
+    _load_config_file :: String -> {}
 
     Given a directory, loads the configuration file.
     If given a file, it will try to get the configuration from the
@@ -50,7 +45,46 @@ def _load_integration_config_file(path):
         return yaml.load(config_file)
 
 
-def _get_integration_instance(integration_configuration):
+def _load_integrations_from_configuration(integrations_configuration):
+    for alias, integration_name, kwargs_for_integration_constructor \
+        in unpack_integration_configuration_data(integrations_configuration):
+            loaded_integrations[alias] = _get_integration_instance(
+                integration_name,
+                kwargs_for_integration_constructor
+            )
+
+
+def unpack_integration_configuration_data(integrations_configuration):
+    for alias, child in integrations_configuration.items():
+        if child is None:
+            integration_name = alias
+            kwargs_for_integration_constructor = None
+        elif _has_only_one_key_and_a_dict_as_value(child):
+            integration_name = _get_the_only_key_in(child)
+            kwargs_for_integration_constructor = child[integration_name]
+        elif _has_only_one_key_and_None_as_value(child):
+            integration_name = _get_the_only_key_in(child)
+            kwargs_for_integration_constructor = None
+        else:
+            integration_name = alias
+            kwargs_for_integration_constructor = child
+
+        yield (alias, integration_name, kwargs_for_integration_constructor)
+
+
+def _has_only_one_key_and_a_dict_as_value(a_dict):
+    return len(a_dict.keys()) == 1 and type(a_dict[_get_the_only_key_in(a_dict)]) is dict
+
+
+def _get_the_only_key_in(a_dict):
+    return list(a_dict.keys())[0]
+
+
+def _has_only_one_key_and_None_as_value(a_dict):
+    return list(a_dict.values()) == [None]
+
+
+def _get_integration_instance(name, kwargs_for_integration_constructor):
     """
     _get_integration_instance :: {} -> AbstractIntegration
 
@@ -59,15 +93,12 @@ def _get_integration_instance(integration_configuration):
     name, and return an instance of it, passing it all the parameters in the
     parameter dictionary.
     """
-    integration_name = list(integration_configuration.keys())[0]
     try:
-        integration_class = integration_classes[integration_name]
-    except KeyError as e:
-        print("The integration {} does not exist\nAborting...".format(e))
+        integration_class = integration_classes[name]
+        if kwargs_for_integration_constructor is None:
+            return integration_class()
+        else:
+            return integration_class(**kwargs_for_integration_constructor)
+    except KeyError:
+        print("The '{}' integration does not exist\nAborting...".format(name))
         exit(1)
-
-    kwargs_for_integration_constructor = integration_configuration.values()
-    if kwargs_for_integration_constructor:
-        return integration_class(**kwargs_for_integration_constructor)
-    else:
-        return integration_class()
