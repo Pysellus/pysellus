@@ -20,14 +20,23 @@ This configuration file has a very simple structure: all the notifications that 
 
 ```yaml
 notify:
-    'user alias':
-        integration_name:
-            attr1: val1
-            # ...
-            attrn: valn
+    integration_name:
+        attr1: val1
+        # ...
+        attrn: valn
 ```
 
-Here, we are defining an `integration_name` integration, with an alias of `user_alias`, and configuring it with `n` attributes and values. Your aliases must be unique across all declared integrations.
+Here, we are defining an `integration_name` and configuring it with `n` attributes and values.
+
+Additionally, you can add aliases for all integrations. These aliases must be unique across all declared integrations.
+
+```yaml
+notify:
+    'alias':
+        integration_name:
+            ...
+```
+
 
 #### [Slack][slack-url]
 
@@ -39,13 +48,12 @@ To define an instance of a `slack` integration, with an alias of `foo`, we would
 
 ```yaml
 notify:
-    'foo':
-        slack:
-            url: 'https://...' # slack post url
-            # optionally, one of
-            channel: '#some_channel'
-            # or
-            channel: '@some_user'
+    slack:
+        url: 'https://...' # slack post url
+        # optionally, one of
+        channel: '#some_channel'
+        # or
+        channel: '@some_user'
 ```
 
 Obviously, you can give it whatever name you want.
@@ -66,12 +74,11 @@ You configure it like this:
 
 ```yaml
 notify:
-    'my-trello-alias':
-        trello:
-            key: 'your-application-key'
-            token: 'your-authorization-token'
-            card: 'the-id-of-your-card'
-            checklist: 'the-id-of-your-checklist'
+    trello:
+        key: 'your-application-key'
+        token: 'your-authorization-token'
+        card: 'the-id-of-your-card'
+        checklist: 'the-id-of-your-checklist'
 ```
 
 
@@ -83,11 +90,10 @@ You configure it like this:
 
 ```yaml
 notify:
-    'my-trello-alias':
-        trello:
-            key: 'your-application-key'
-            token: 'your-authorization-token'
-            list: 'the-id-of-your-list'
+    trello:
+        key: 'your-application-key'
+        token: 'your-authorization-token'
+        list: 'the-id-of-your-list'
 ```
 
 [slack-url]:  https://slack.com
