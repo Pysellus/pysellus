@@ -62,8 +62,8 @@ def unpack_integration_configuration_data(integrations_configuration):
         elif _has_only_one_key_and_a_dict_as_value(child):
             integration_name = _get_the_only_key_in(child)
             kwargs_for_integration_constructor = child[integration_name]
-        elif _has_empty_dict(child):
-            integration_name = list(child.keys())[0]
+        elif _has_only_one_key_and_None_as_value(child):
+            integration_name = _get_the_only_key_in(child)
             kwargs_for_integration_constructor = None
         else:
             integration_name = alias
@@ -80,8 +80,8 @@ def _get_the_only_key_in(a_dict):
     return list(a_dict.keys())[0]
 
 
-def _has_empty_dict(child):
-    return list(child.values()) == [None]
+def _has_only_one_key_and_None_as_value(a_dict):
+    return list(a_dict.values()) == [None]
 
 
 def _get_integration_instance(name, kwargs_for_integration_constructor):
