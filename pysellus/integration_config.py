@@ -56,9 +56,15 @@ def _load_integrations_from_configuration(integrations_configuration):
 
 def unpack_integration_configuration_data(integrations_configuration):
     for alias, child in integrations_configuration.items():
-        if _has_only_one_key_and_a_dict_as_value(child):
+        if child is None:
+            integration_name = alias
+            kwargs_for_integration_constructor = None
+        elif _has_only_one_key_and_a_dict_as_value(child):
             integration_name = _get_the_only_key_in(child)
             kwargs_for_integration_constructor = child[integration_name]
+        elif _has_empty_dict(child):
+            integration_name = list(child.keys())[0]
+            kwargs_for_integration_constructor = None
         else:
             integration_name = alias
             kwargs_for_integration_constructor = child
@@ -74,6 +80,10 @@ def _get_the_only_key_in(a_dict):
     return list(a_dict.keys())[0]
 
 
+def _has_empty_dict(child):
+    return list(child.values()) == [None]
+
+
 def _get_integration_instance(name, kwargs_for_integration_constructor):
     """
     _get_integration_instance :: {} -> AbstractIntegration
@@ -85,8 +95,10 @@ def _get_integration_instance(name, kwargs_for_integration_constructor):
     """
     try:
         integration_class = integration_classes[name]
+        if kwargs_for_integration_constructor is None:
+            return integration_class()
+        else:
+            return integration_class(**kwargs_for_integration_constructor)
     except KeyError:
         print("The '{}' integration does not exist\nAborting...".format(name))
         exit(1)
-
-    return integration_class(**kwargs_for_integration_constructor)
