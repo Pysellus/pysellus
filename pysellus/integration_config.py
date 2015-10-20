@@ -1,7 +1,9 @@
 import os
+import inspect
 
 import yaml
 
+from pysellus.loader import load_modules
 from pysellus.stock_integrations import integration_classes
 
 
@@ -19,7 +21,9 @@ def load_integrations(path):
     """
     configuration = _load_config_file(path)
     integrations_configuration = configuration['notify']
+    custom_integrations_configuration = configuration['custom_integrations']
 
+    _load_custom_integrations(custom_integrations_configuration)
     _load_integrations_from_configuration(integrations_configuration)
 
 
@@ -43,6 +47,37 @@ def _load_config_file(path):
 
     with open(config_path, 'r') as config_file:
         return yaml.load(config_file)
+
+
+def _load_custom_integrations(custom_configuration):
+    for alias, configuration in custom_configuration.items():
+        integration_name = configuration['name']
+        integration_path = configuration['path']
+
+        classobject = _get_matching_classobject_from_path(
+            integration_name,
+            integration_path
+        )
+
+        if classobject is None:
+            exit(
+                "Malformed custom integration '{alias}:\n\t'{klass}' class not found in {module}"
+                .format(
+                    alias=alias,
+                    klass=integration_name,
+                    module=integration_path
+                )
+            )
+
+        integration_classes[alias] = classobject
+
+
+def _get_matching_classobject_from_path(class_name, path):
+    integration_module = load_modules(path)[0]
+    module_members = inspect.getmembers(integration_module, inspect.isclass)
+    for name, classobject in module_members:
+        if name == class_name:
+            return classobject
 
 
 def _load_integrations_from_configuration(integrations_configuration):
