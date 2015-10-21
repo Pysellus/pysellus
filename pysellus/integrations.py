@@ -1,6 +1,14 @@
 from inspect import getdoc
 
-from pysellus import integration_config
+from pysellus.stock_integrations import stock_integration_classes
+
+# integration_name -> integration_class_object
+# maps integration names to its object classes (inside modules)
+integration_classes = stock_integration_classes
+
+# integration_alias -> integration_instance
+# maps integration aliases to class instances
+loaded_integrations = {}
 
 """
 {
@@ -91,12 +99,12 @@ def _create(integration_name):
 
     """
     try:
-        integration_instance = integration_config.loaded_integrations[integration_name]
+        integration_instance = loaded_integrations[integration_name]
         return integration_instance.get_subject()
     except KeyError as e:
-        print("The integration {} is used, but it's not declared,".format(e))
-        print("check that all integrations used are correctly declared in the configuration file")
-        exit(1)
+        exit("The integration {} is used, but it's not declared,\n"
+             "check that all integrations used are correctly declared in the configuration file"
+             .format(e))
 
 
 def notify_element(test_name, element_payload):
