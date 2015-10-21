@@ -141,5 +141,4 @@ def _get_integration_instance(name, kwargs_for_integration_constructor):
         else:
             return integration_class(**kwargs_for_integration_constructor)
     except KeyError:
-        print("The '{}' integration does not exist\nAborting...".format(name))
-        exit(1)
+        exit("On integration '{}': definition missing\nAborting...".format(name))
