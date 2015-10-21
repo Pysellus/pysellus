@@ -4,7 +4,7 @@ import inspect
 import yaml
 
 from pysellus.loader import load_modules
-from pysellus.stock_integrations import integration_classes
+from pysellus.stock_integrations import stock_integration_classes
 
 
 CONFIGURATION_FILE_NAME = '.ps_integrations.yml'
@@ -51,7 +51,7 @@ def _load_config_file(path):
 
 def _load_custom_integrations(custom_configuration):
     for alias, configuration in custom_configuration.items():
-        if alias in integration_classes.keys():
+        if alias in stock_integration_classes.keys():
             exit(
                 "Conflicting integration name '{}'. Integration names must be unique\nAborting..."
                 .format(alias)
@@ -75,7 +75,7 @@ def _load_custom_integrations(custom_configuration):
                 )
             )
 
-        integration_classes[alias] = classobject
+        stock_integration_classes[alias] = classobject
 
 
 def _get_matching_classobject_from_path(class_name, path):
@@ -135,7 +135,7 @@ def _get_integration_instance(name, kwargs_for_integration_constructor):
     parameter dictionary.
     """
     try:
-        integration_class = integration_classes[name]
+        integration_class = stock_integration_classes[name]
         if kwargs_for_integration_constructor is None:
             return integration_class()
         else:
