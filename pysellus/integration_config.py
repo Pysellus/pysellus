@@ -20,11 +20,11 @@ def load_integrations(path):
     Given a path, find the config file at it and load it.
     """
     configuration = _load_config_file(path)
-    integrations_configuration = configuration['notify']
-    custom_integrations_configuration = configuration['custom_integrations']
+    if configuration is None:
+        exit("Error while reading {}: file seems to be empty".format(CONFIGURATION_FILE_NAME))
 
-    _load_custom_integrations(custom_integrations_configuration)
-    _load_integrations_from_configuration(integrations_configuration)
+    _load_custom_integrations(configuration)
+    _load_defined_integrations(configuration)
 
 
 def _load_config_file(path):
@@ -49,7 +49,23 @@ def _load_config_file(path):
         return yaml.load(config_file)
 
 
-def _load_custom_integrations(custom_configuration):
+def _load_defined_integrations(configuration):
+    try:
+        integration_configuration = configuration['notify']
+        _load_integrations_from_configuration(integration_configuration)
+    except KeyError:
+        exit("Malformed configuration file: missing 'notify' section")
+
+
+def _load_custom_integrations(configuration):
+    try:
+        custom_integrations_configuration = configuration['custom_integrations']
+        _load_custom_integrations_classes(custom_integrations_configuration)
+    except KeyError:
+        pass  # it's ok for the user to not define custom integrations
+
+
+def _load_custom_integrations_classes(custom_configuration):
     for alias, configuration in custom_configuration.items():
         if alias in stock_integration_classes.keys():
             exit(
