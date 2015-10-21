@@ -100,14 +100,14 @@ def _get_matching_classobject_from_path(class_name, path):
 
 def _load_integrations_from_configuration(integrations_configuration):
     for alias, integration_name, kwargs_for_integration_constructor \
-            in unpack_integration_configuration_data(integrations_configuration):
+            in _unpack_integration_configuration_data(integrations_configuration):
         loaded_integrations[alias] = _get_integration_instance(
             integration_name,
             kwargs_for_integration_constructor
         )
 
 
-def unpack_integration_configuration_data(integrations_configuration):
+def _unpack_integration_configuration_data(integrations_configuration):
     for alias, child in integrations_configuration.items():
         if child is None:
             integration_name = alias
