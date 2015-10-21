@@ -51,6 +51,12 @@ def _load_config_file(path):
 
 def _load_custom_integrations(custom_configuration):
     for alias, configuration in custom_configuration.items():
+        if alias in integration_classes.keys():
+            exit(
+                "Conflicting integration name '{}'. Integration names must be unique\nAborting..."
+                .format(alias)
+            )
+
         integration_name = configuration['name']
         integration_path = configuration['path']
 
