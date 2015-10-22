@@ -16,9 +16,6 @@ def load_integrations(path):
     Given a path, find the config file at it and load it.
     """
     configuration = _load_config_file(path)
-    if configuration is None:
-        exit("Error while reading {}: file seems to be empty".format(CONFIGURATION_FILE_NAME))
-
     _load_custom_integrations(configuration)
     _load_defined_integrations(configuration)
 
@@ -42,7 +39,9 @@ def _load_config_file(path):
         raise FileNotFoundError
 
     with open(config_path, 'r') as config_file:
-        return yaml.load(config_file)
+        config = yaml.load(config_file)
+        return config if config else \
+            exit("Error while reading {}: file seems to be empty".format(CONFIGURATION_FILE_NAME))
 
 
 def _load_defined_integrations(configuration):
