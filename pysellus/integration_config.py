@@ -45,6 +45,14 @@ def _load_config_file(path):
 
 
 def _load_defined_integrations(configuration):
+    """
+    _load_defined_integrations :: {} -> IO
+
+    Given an integration configuration dict, get their constructors and import them,
+    then add them to the integrations#loaded_integrations dict.
+
+    Fails if the constructor section is missing.
+    """
     try:
         integration_configuration = configuration['notify']
         _load_integrations_from_configuration(integration_configuration)
@@ -53,6 +61,14 @@ def _load_defined_integrations(configuration):
 
 
 def _load_custom_integrations(configuration):
+    """
+    _load_custom_integrations :: {} -> IO
+
+    Given an integration configuration dict, get their definitions and import them,
+    then add them to the integrations#loaded_integrations dict.
+
+    If the definition is missing, pass.
+    """
     try:
         custom_integrations_configuration = configuration['custom_integrations']
         _load_custom_integrations_classes(custom_integrations_configuration)
@@ -61,6 +77,15 @@ def _load_custom_integrations(configuration):
 
 
 def _load_custom_integrations_classes(custom_configuration):
+    """
+    _load_custom_integrations_classes :: {} -> IO
+
+    Given a map of configuration definitions, find the integration module, import it,
+    and then load the appropiate class object into the integration_classes dict.
+
+    Fails if it can't find the class object inside the module, or if the integration
+    name is a duplicate.
+    """
     for alias, configuration in custom_configuration.items():
         if alias in integration_classes.keys():
             exit(
@@ -90,6 +115,14 @@ def _load_custom_integrations_classes(custom_configuration):
 
 
 def _get_matching_classobject_from_path(class_name, path):
+    """
+    _get_matching_classobject_from_path :: String -> String -> python.ClassObject | None
+
+    Given a class name, and a module path, search for the given class inside it and return the
+    first match.
+
+    If no match is found, return None.
+    """
     integration_module = load_modules(path)[0]
     module_members = inspect.getmembers(integration_module, inspect.isclass)
     for name, classobject in module_members:
@@ -98,6 +131,13 @@ def _get_matching_classobject_from_path(class_name, path):
 
 
 def _load_integrations_from_configuration(integrations_configuration):
+    """
+    _load_integrations_from_configuration :: {} -> IO
+
+    Given a map of integration constructors, gather the attributes and build an instance
+    of the integration. Then map their aliases with their instances inside the
+    loaded_integrations dict
+    """
     for alias, integration_name, kwargs_for_integration_constructor \
             in _unpack_integration_configuration_data(integrations_configuration):
         loaded_integrations[alias] = _get_integration_instance(
@@ -107,6 +147,14 @@ def _load_integrations_from_configuration(integrations_configuration):
 
 
 def _unpack_integration_configuration_data(integrations_configuration):
+    """
+    _unpack_integration_configuration_data :: {} -> (String, String, {} | None)
+
+    Given a map of integration constructors, gather the attributes into an alias, the integration
+    name and a map of constructor parameters.
+
+    Yields a tuple on every call.
+    """
     for alias, child in integrations_configuration.items():
         if child is None:
             integration_name = alias
