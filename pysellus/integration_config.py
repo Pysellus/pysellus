@@ -44,22 +44,6 @@ def _load_config_file(path):
             exit("Error while reading {}: file seems to be empty".format(CONFIGURATION_FILE_NAME))
 
 
-def _load_defined_integrations(configuration):
-    """
-    _load_defined_integrations :: {} -> IO
-
-    Given an integration configuration dict, get their constructors and import them,
-    then add them to the integrations#loaded_integrations dict.
-
-    Fails if the constructor section is missing.
-    """
-    try:
-        integration_configuration = configuration['notify']
-        _load_integrations_from_configuration(integration_configuration)
-    except KeyError:
-        exit("Malformed configuration file: missing 'notify' section")
-
-
 def _load_custom_integrations(configuration):
     """
     _load_custom_integrations :: {} -> IO
@@ -128,6 +112,22 @@ def _get_matching_classobject_from_path(class_name, path):
     for name, classobject in module_members:
         if name == class_name:
             return classobject
+
+
+def _load_defined_integrations(configuration):
+    """
+    _load_defined_integrations :: {} -> IO
+
+    Given an integration configuration dict, get their constructors and import them,
+    then add them to the integrations#loaded_integrations dict.
+
+    Fails if the constructor section is missing.
+    """
+    try:
+        integration_configuration = configuration['notify']
+        _load_integrations_from_configuration(integration_configuration)
+    except KeyError:
+        exit("Malformed configuration file: missing 'notify' section")
 
 
 def _load_integrations_from_configuration(integrations_configuration):
