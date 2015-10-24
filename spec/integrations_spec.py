@@ -1,6 +1,6 @@
 import rx
 
-from expects import expect, be, contain_exactly, be_a
+from expects import expect, be, contain_exactly, be_a, raise_error
 from doublex import Spy, Mock
 from doublex_expects import have_been_called
 
@@ -35,6 +35,9 @@ with description('the integrations module'):
             on_failure('some_integration')(decorated_function)
 
             expect(decorated_function).to_not(have_been_called)
+
+        with it('aborts the program if it references a non-existent integration'):
+            expect(lambda: integrations._create('bogus_name')).to(raise_error(SystemExit))
 
         with it('has the (convenient) side effect of registering the integration name with a subject'):
             decorated_function = Spy().decorated_function

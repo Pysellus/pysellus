@@ -3,7 +3,7 @@ import inspect
 
 import yaml
 
-from pysellus.loader import load_modules
+from pysellus import loader
 from pysellus.integrations import loaded_integrations, integration_classes
 
 CONFIGURATION_FILE_NAME = '.ps_integrations.yml'
@@ -77,8 +77,11 @@ def _load_custom_integrations_classes(custom_configuration):
                 .format(alias)
             )
 
-        integration_name = configuration['name']
-        integration_path = configuration['path']
+        integration_name = configuration.pop('name', None)
+        integration_path = configuration.pop('path', None)
+
+        if integration_classes is None or integration_path is None:
+            exit("Malformed integration '{}': missing class name and/or module path".format(alias))
 
         classobject = _get_matching_classobject_from_path(
             integration_name,
@@ -107,7 +110,7 @@ def _get_matching_classobject_from_path(class_name, path):
 
     If no match is found, return None.
     """
-    integration_module = load_modules(path)[0]
+    integration_module = loader.load_modules(path)[0]
     module_members = inspect.getmembers(integration_module, inspect.isclass)
     for name, classobject in module_members:
         if name == class_name:
