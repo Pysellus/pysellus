@@ -138,7 +138,7 @@ We've learned the hard way that code without tests is undependable. If your pull
 
 For now, we use the [Mamba Test framework](https://github.com/nestorsalceda/mamba).
 
-Also, keep your tests as simple as possible. Complex tests end up requiring their own tests. We would rather see duplicated assertions across test methods then cunning utility methods that magically determine which assertions are needed at a particular stage. 
+Also, keep your tests as simple as possible. Complex tests end up requiring their own tests. We would rather see duplicated assertions across test methods than cunning utility methods that magically determine which assertions are needed at a particular stage.
 
 Remember: `Explicit is better than implicit`.
 
