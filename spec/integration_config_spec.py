@@ -55,7 +55,15 @@ with description('the integration_config module'):
                 with context('each configuration contains a module path and a class name'):
                     with it('aborts the program if the either key is missing'):
                         config_dict = {'some_alias': {}}
+                        config_dict_1 = {'some_alias': {'name': 'foo'}}
+                        config_dict_2 = {'some_alias': {'path': 'foo'}}
                         expect(lambda: integration_config._load_custom_integrations_classes(config_dict)).to(
+                            raise_error(SystemExit)
+                        )
+                        expect(lambda: integration_config._load_custom_integrations_classes(config_dict_1)).to(
+                            raise_error(SystemExit)
+                        )
+                        expect(lambda: integration_config._load_custom_integrations_classes(config_dict_2)).to(
                             raise_error(SystemExit)
                         )
 

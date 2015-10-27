@@ -80,7 +80,7 @@ def _load_custom_integrations_classes(custom_configuration):
         integration_name = configuration.pop('name', None)
         integration_path = configuration.pop('path', None)
 
-        if integration_classes is None or integration_path is None:
+        if not all((integration_name, integration_path)):
             exit("Malformed integration '{}': missing class name and/or module path".format(alias))
 
         classobject = _get_matching_classobject_from_path(
