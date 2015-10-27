@@ -53,11 +53,11 @@ def _load_custom_integrations(configuration):
 
     If the definition is missing, pass.
     """
-    try:
-        custom_integrations_configuration = configuration['custom_integrations']
-        _load_custom_integrations_classes(custom_integrations_configuration)
-    except KeyError:
-        pass  # it's ok for the user to not define custom integrations
+    if 'custom_integrations' not in configuration:
+        return
+
+    custom_integrations_configuration = configuration['custom_integrations']
+    _load_custom_integrations_classes(custom_integrations_configuration)
 
 
 def _load_custom_integrations_classes(custom_configuration):
