@@ -28,16 +28,10 @@ with description('the integration_config module'):
 
                     os.path.isfile = isfile
 
-        # PermissonError: [Errno 1] Operation not permitted
-        with it('exits the program if the file is empty'):
-            path = '/tmp/ps' + integration_config.CONFIGURATION_FILE_NAME
-            os.mknod(path)
-
-            expect(lambda: integration_config._load_config_file(path)).to(
-                raise_error(SystemExit)
-            )
-
-            os.remove(path)
+            with it('raises an exception if the config file is empty'):
+                expect(lambda: integration_config._load_configuration_from_contents_of_config_file('')).to(
+                    raise_error(integration_config.EmptyConfigurationFileError)
+                )
 
     with description('loads integrations from a dict'):
         with context('which has a definition section'):

@@ -33,15 +33,31 @@ def _load_config_file(path):
     if os.path.isfile(path):
         path = path.rsplit('/', 1)[0]
 
-    config_path = path + '/' + CONFIGURATION_FILE_NAME
+    path_to_configuration_file = path + '/' + CONFIGURATION_FILE_NAME
 
-    if not os.path.exists(config_path):
+    if not os.path.exists(path_to_configuration_file):
         raise FileNotFoundError
 
-    with open(config_path, 'r') as config_file:
-        config = yaml.load(config_file)
-        return config if config else \
-            exit("Error while reading {}: file seems to be empty".format(CONFIGURATION_FILE_NAME))
+    with open(path_to_configuration_file, 'r') as config_file:
+        try:
+            configuration = _load_configuration_from_contents_of_config_file(config_file)
+        except EmptyConfigurationFileError as error:
+            exit("Error while reading {path}: {reason}".format(
+                path=path_to_configuration_file,
+                reason=error.message
+                )
+            )
+
+        return configuration
+
+
+def _load_configuration_from_contents_of_config_file(contents_of_config_file):
+    loaded_configuration = yaml.load(contents_of_config_file)
+
+    if loaded_configuration is None:
+        raise EmptyConfigurationFileError()
+
+    return loaded_configuration
 
 
 def _load_custom_integrations(configuration):
@@ -204,3 +220,10 @@ def _get_integration_instance(name, kwargs_for_integration_constructor):
             return integration_class(**kwargs_for_integration_constructor)
     except KeyError:
         exit("On integration '{}': definition missing\nAborting...".format(name))
+
+
+class EmptyConfigurationFileError(Exception):
+    def __init__(self, message="configuration file is empty"):
+        super(EmptyConfigurationFileError, self).__init__(message)
+
+        self.message = message
