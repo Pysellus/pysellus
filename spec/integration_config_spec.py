@@ -1,5 +1,7 @@
 import os
 import inspect
+import tempfile
+import shutil
 
 from doublex import Spy
 from expects import expect, have_key, raise_error, be
@@ -9,24 +11,38 @@ from pysellus import loader
 from pysellus import integrations
 from pysellus import integration_config
 
+
 with description('the integration_config module'):
     with description('loads integrations from a config file'):
-            with context('when given a path to a directory'):
-                with it('raises FileNotFoundError if the config file doesn\'t exist in that directory'):
-                    expect(lambda: integration_config._load_config_file('/bogus/path')).to(
-                        raise_error(FileNotFoundError)
+            with context('raises FileNotFoundError if the config file is not present at the given path'):
+                with before.each:
+                    self.path_to_directory_without_config_file = tempfile.mkdtemp()
+
+                with it('when the path is to a directory'):
+                    def attempt_to_read_config_file():
+                        integration_config._get_path_to_configuration_file(
+                            self.path_to_directory_without_config_file
+                        )
+
+                    expect(attempt_to_read_config_file).to(raise_error(FileNotFoundError))
+
+                with it('when the path is to a file (in which case its parent directory is considered)'):
+                    path_to_file_whose_parent_directory_doesnt_contain_config_file = os.path.join(
+                        self.path_to_directory_without_config_file,
+                        'a_file.py'
                     )
+                    open(path_to_file_whose_parent_directory_doesnt_contain_config_file, 'w').close()
 
-            with context('when given a path to a file'):
-                with it('raises FileNotFoundError if the config file doesn\' exist in the parent folder of the given path'):
-                    isfile = os.path.isfile
-                    os.path.isfile = lambda pth: True
+                    def attempt_to_read_config_file():
+                        integration_config._get_path_to_configuration_file(
+                            path_to_file_whose_parent_directory_doesnt_contain_config_file
+                        )
 
-                    expect(lambda: integration_config._load_config_file('/bogus/path/file.py')).to(
-                        raise_error(FileNotFoundError)
-                    )
+                    expect(attempt_to_read_config_file).to(raise_error(FileNotFoundError))
 
-                    os.path.isfile = isfile
+                with after.each:
+                    shutil.rmtree(self.path_to_directory_without_config_file)
+
 
             with it('raises an exception if the config file is empty'):
                 expect(lambda: integration_config._load_configuration_from_contents_of_config_file('')).to(
