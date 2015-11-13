@@ -11,19 +11,22 @@ from pysellus import integration_config
 
 with description('the integration_config module'):
     with description('loads integrations from a config file'):
-        with it('raises FileNotFoundError if the file doesn\'t exist'):
-            expect(lambda: integration_config._load_config_file('/bogus/path')).to(
-                raise_error(FileNotFoundError)
-            )
+            with context('when given a path to a directory'):
+                with it('raises FileNotFoundError if the config file doesn\'t exist in that directory'):
+                    expect(lambda: integration_config._load_config_file('/bogus/path')).to(
+                        raise_error(FileNotFoundError)
+                    )
 
-            isfile = os.path.isfile
-            os.path.isfile = lambda pth: True
+            with context('when given a path to a file'):
+                with it('raises FileNotFoundError if the config file doesn\' exist in the parent folder of the given path'):
+                    isfile = os.path.isfile
+                    os.path.isfile = lambda pth: True
 
-            expect(lambda: integration_config._load_config_file('/bogus/path/file.py')).to(
-                raise_error(FileNotFoundError)
-            )
+                    expect(lambda: integration_config._load_config_file('/bogus/path/file.py')).to(
+                        raise_error(FileNotFoundError)
+                    )
 
-            os.path.isfile = isfile
+                    os.path.isfile = isfile
 
         # PermissonError: [Errno 1] Operation not permitted
         with it('exits the program if the file is empty'):
