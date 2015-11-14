@@ -100,11 +100,12 @@ def _create(integration_name):
     """
     try:
         integration_instance = loaded_integrations[integration_name]
-        return integration_instance.get_subject()
     except KeyError as e:
         exit("The integration {} is used, but it's not declared,\n"
              "check that all integrations used are correctly declared in the configuration file"
              .format(e))
+
+    return integration_instance.get_subject()
 
 
 def notify_element(test_name, element_payload):
