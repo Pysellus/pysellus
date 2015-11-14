@@ -88,7 +88,7 @@ with description('the integration_config module'):
 
                         an_integration_class_object = Spy()
 
-                        loader.load_modules = lambda pth: ['sample_returned_module']
+                        loader.load_modules = lambda path: ['sample_returned_module']
                         integration_config._get_classes_in_module = lambda module: [(an_integration_class_name, an_integration_class_object)]
 
 
@@ -115,7 +115,7 @@ with description('the integration_config module'):
 
                         an_integration_class_object = Spy()
 
-                        loader.load_modules = lambda pth: ['sample_returned_module']
+                        loader.load_modules = lambda path: ['sample_returned_module']
                         integration_config._get_classes_in_module = lambda module: [(an_integration_class_name, an_integration_class_object)]
 
 

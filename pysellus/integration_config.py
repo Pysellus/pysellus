@@ -106,24 +106,24 @@ def _load_custom_integrations_classes(custom_configuration):
                 .format(alias)
             )
 
-        integration_name = configuration.pop('name', None)
-        integration_path = configuration.pop('path', None)
-
-        if not all((integration_name, integration_path)):
+        try:
+            integration_class_name = configuration['name']
+            path_to_integration_module = configuration['path']
+        except KeyError:
             exit("Malformed integration '{}': missing class name and/or module path".format(alias))
 
         classobject = _get_matching_classobject_from_path(
-            integration_name,
-            integration_path
+            integration_class_name,
+            path_to_integration_module
         )
 
         if classobject is None:
             exit(
-                "Malformed custom integration '{alias}:\n\t'{klass}' class not found in {module}"
+                "Malformed custom integration '{alias}:\n\t'{klass}' class not found in {path_to_integration_module}"
                 .format(
                     alias=alias,
-                    klass=integration_name,
-                    module=integration_path
+                    klass=integration_class_name,
+                    path_to_integration_module=path_to_integration_module
                 )
             )
 
