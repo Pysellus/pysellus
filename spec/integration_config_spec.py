@@ -1,5 +1,4 @@
 import os
-import inspect
 import tempfile
 import shutil
 
@@ -43,7 +42,6 @@ with description('the integration_config module'):
                 with after.each:
                     shutil.rmtree(self.path_to_directory_without_config_file)
 
-
             with it('raises an exception if the config file is empty'):
                 expect(lambda: integration_config._load_configuration_from_contents_of_config_file('')).to(
                     raise_error(integration_config.EmptyConfigurationFileError)
@@ -83,20 +81,19 @@ with description('the integration_config module'):
 
                         config_dict = {'some_alias': {
                             'name': an_integration_class_name,
-                            'path':a_path_to_an_integration_module
+                            'path': a_path_to_an_integration_module
                         }}
 
                         an_integration_class_object = Spy()
 
                         loader.load_modules = lambda path: ['sample_returned_module']
-                        integration_config._get_classes_in_module = lambda module: [(an_integration_class_name, an_integration_class_object)]
-
+                        integration_config._get_classes_in_module = \
+                            lambda module: [(an_integration_class_name, an_integration_class_object)]
 
                         expect(integration_config._get_matching_classobject_from_path(
                             an_integration_class_name,
                             a_path_to_an_integration_module)
                         ).to(be(an_integration_class_object))
-
 
                         loader.load_modules = load_modules
                         integration_config._get_classes_in_module = original_class_finder
@@ -110,17 +107,16 @@ with description('the integration_config module'):
 
                         config_dict = {'some_alias': {
                             'name': an_integration_class_name,
-                            'path':a_path_to_an_integration_module
+                            'path': a_path_to_an_integration_module
                         }}
 
                         an_integration_class_object = Spy()
 
                         loader.load_modules = lambda path: ['sample_returned_module']
-                        integration_config._get_classes_in_module = lambda module: [(an_integration_class_name, an_integration_class_object)]
-
+                        integration_config._get_classes_in_module = \
+                            lambda module: [(an_integration_class_name, an_integration_class_object)]
 
                         integration_config._load_custom_integrations_classes(config_dict)
-
 
                         expect(integrations.integration_classes).to(have_key('some_alias'))
                         expect(integration_config.integration_classes['some_alias']).to(be(an_integration_class_object))
