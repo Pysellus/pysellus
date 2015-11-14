@@ -140,10 +140,13 @@ def _get_matching_classobject_from_path(class_name, path):
     If no match is found, return None.
     """
     integration_module = loader.load_modules(path)[0]
-    module_members = inspect.getmembers(integration_module, inspect.isclass)
-    for name, classobject in module_members:
+    for name, classobject in _get_classes_in_module(integration_module):
         if name == class_name:
             return classobject
+
+
+def _get_classes_in_module(module):
+    return inspect.getmembers(module, inspect.isclass)
 
 
 def _load_defined_integrations(configuration):

@@ -66,7 +66,7 @@ with description('the integration_config module'):
                     del integrations.integration_classes['duplicated_name']
 
                 with context('each configuration contains a module path and a class name'):
-                    with it('aborts the program if the either key is missing'):
+                    with it('aborts the program if either key is missing'):
                         for malformed_config_dict in [{'some_alias': {}},
                                                       {'some_alias': {'name': 'foo'}},
                                                       {'some_alias': {'path': 'foo'}}]:
@@ -74,37 +74,62 @@ with description('the integration_config module'):
                                 raise_error(SystemExit)
                             )
 
-                    with it('loads the module and finds the class name inside it'):
+                    with it('finds the class name inside the module'):
                         load_modules = loader.load_modules
-                        getmembers = inspect.getmembers
+                        original_class_finder = integration_config._get_classes_in_module
+
+                        an_integration_class_name = 'IntegrationClassName'
+                        a_path_to_an_integration_module = '/some/filesystem/path'
 
                         config_dict = {'some_alias': {
-                            'name': 'IntegrationClassName',
-                            'path': '/some/filesystem/path'
+                            'name': an_integration_class_name,
+                            'path':a_path_to_an_integration_module
                         }}
 
-                        name = config_dict['some_alias']['name']
-                        path = config_dict['some_alias']['path']
-
-                        classobject = Spy()
+                        an_integration_class_object = Spy()
 
                         loader.load_modules = lambda pth: ['sample_returned_module']
-                        inspect.getmembers = lambda module, pred: [(name, classobject)]
+                        integration_config._get_classes_in_module = lambda module: [(an_integration_class_name, an_integration_class_object)]
 
-                        expect(integration_config._get_matching_classobject_from_path(name, path)).to(
-                            be(classobject)
-                        )
+
+                        expect(integration_config._get_matching_classobject_from_path(
+                            an_integration_class_name,
+                            a_path_to_an_integration_module)
+                        ).to(be(an_integration_class_object))
+
+
+                        loader.load_modules = load_modules
+                        integration_config._get_classes_in_module = original_class_finder
+
+                    with it('saves the class to the pysellus.integrations.integration_classes dict under the specified alias'):
+                        load_modules = loader.load_modules
+                        original_class_finder = integration_config._get_classes_in_module
+
+                        an_integration_class_name = 'IntegrationClassName'
+                        a_path_to_an_integration_module = '/some/filesystem/path'
+
+                        config_dict = {'some_alias': {
+                            'name': an_integration_class_name,
+                            'path':a_path_to_an_integration_module
+                        }}
+
+                        an_integration_class_object = Spy()
+
+                        loader.load_modules = lambda pth: ['sample_returned_module']
+                        integration_config._get_classes_in_module = lambda module: [(an_integration_class_name, an_integration_class_object)]
+
 
                         integration_config._load_custom_integrations_classes(config_dict)
 
+
                         expect(integrations.integration_classes).to(have_key('some_alias'))
-                        expect(integration_config.integration_classes['some_alias']).to(be(classobject))
+                        expect(integration_config.integration_classes['some_alias']).to(be(an_integration_class_object))
 
                         del integration_config.integration_classes['some_alias']
                         loader.load_modules = load_modules
-                        inspect.getmembers = getmembers
+                        integration_config._get_classes_in_module = original_class_finder
 
-                    with it('aborts the program if the given class name is not in the path module'):
+                    with it('aborts the program if the given class name is not in the module at the specified path'):
                         integration_config._get_matching_classobject_from_path = lambda a, b: None
 
                         config_dict = {'some_alias': {'path': '/some/path', 'name': 'some_name'}}
