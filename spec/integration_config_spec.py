@@ -130,12 +130,15 @@ with description('the integration_config module'):
                         integration_config._get_classes_in_module = original_class_finder
 
                     with it('aborts the program if the given class name is not in the module at the specified path'):
+                        original_integration_class_finder = integration_config._get_matching_classobject_from_path
                         integration_config._get_matching_classobject_from_path = lambda a, b: None
 
                         config_dict = {'some_alias': {'path': '/some/path', 'name': 'some_name'}}
                         expect(lambda: integration_config._load_custom_integrations_classes(config_dict)).to(
                             raise_error(SystemExit)
                         )
+
+                        integration_config._get_matching_classobject_from_path = original_integration_class_finder
 
         with context('and a notify section'):
             with before.each:
