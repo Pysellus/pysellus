@@ -84,7 +84,7 @@ $ pysellus [-d|--dir] /path/to/test/dir,
 - [Python Syntax](./doc/Python\ Test\ Syntax.md)
 - [Integrations](./doc/Integrations.md)
 - [Adding your own API](.) - In Progress
-- [Custom Integrations](.) - In Progress
+- [Custom Integrations](./doc/Integrations.md#custom-integrations)
 - [Notification Protocol](.) - In Progress
 
 ### Contributing
