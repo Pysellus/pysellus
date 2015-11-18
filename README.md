@@ -70,7 +70,7 @@ You can read about the full STL syntax in the official [documentation](./doc/STL
 
 ### Usage
 
-**Pysellus** is installed as a command-line application. To use it, just call `pyselus`, passing either your test directory or file path.
+**Pysellus** is installed as a command-line application. To use it, just call `pysellus`, passing either your test directory or file path.
 
 ```
 $ pysellus [-d|--dir] /path/to/test/dir,
