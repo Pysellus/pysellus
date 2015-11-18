@@ -35,7 +35,7 @@ def _load_config_file(path):
 
     with open(path_to_configuration_file, 'r') as config_file:
         try:
-            configuration = _load_configuration_from_contents_of_config_file(config_file)
+            configuration = _load_configuration_from_config_file(config_file)
         except EmptyConfigurationFileError as error:
             exit(
                 "Error while reading {path}: {reason}"
@@ -68,8 +68,8 @@ def _get_parent_directory_of_path(path):
     return os.path.dirname(path)
 
 
-def _load_configuration_from_contents_of_config_file(contents_of_config_file):
-    loaded_configuration = yaml.load(contents_of_config_file)
+def _load_configuration_from_config_file(config_file):
+    loaded_configuration = yaml.load(config_file)
 
     if loaded_configuration is None:
         raise EmptyConfigurationFileError()

@@ -43,7 +43,7 @@ with description('the integration_config module'):
                     shutil.rmtree(self.path_to_directory_without_config_file)
 
             with it('raises an exception if the config file is empty'):
-                expect(lambda: integration_config._load_configuration_from_contents_of_config_file('')).to(
+                expect(lambda: integration_config._load_configuration_from_config_file('')).to(
                     raise_error(integration_config.EmptyConfigurationFileError)
                 )
 
