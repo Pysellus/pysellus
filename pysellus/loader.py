@@ -4,17 +4,39 @@ from inspect import isfunction
 from importlib import import_module
 
 
-def load(path):
-    if _is_python_file(path):
-        sys.path.insert(0, os.path.dirname(path))
-        module = import_module(_get_module_name_from_path(path))
-        return _get_setup_functions_from_module(module)
+def load_test_files(path):
+    """
+    load_test_files :: String -> [(a -> b)]
+
+    Given a filesystem path, import all modules under that path, then import all setup_functions
+    inside those modules.
+
+    See load_modules, _get_setup_functions_from_module
+    """
+    modules = load_modules(path)
 
     functions = []
-    for module in _get_modules(path):
+    for module in modules:
         functions += _get_setup_functions_from_module(module)
 
     return functions
+
+
+def load_modules(path):
+    """
+    load_modules :: String -> [python.Module]
+
+    Given a filesystem path, import all modules under that path.
+
+    If the path is a file, import that file. If it's a directory, import all python files inside
+    that folder, in a non-recursive manner.
+    """
+    if _is_python_file(path):
+        sys.path.insert(0, os.path.dirname(path))
+        module = import_module(_get_module_name_from_path(path))
+        return [module]
+
+    return _get_modules(path)
 
 
 def _get_module_name_from_path(path):

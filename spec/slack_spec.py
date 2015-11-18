@@ -1,13 +1,13 @@
 from expects import expect, be, have_key
 
-from pysellus.stock_integrations import slack, integration_classes
+from pysellus.stock_integrations import slack, stock_integration_classes
 
 
 with description('the slack integration module'):
 
     with it('should be in the integration classes dictionary'):
-        expect(integration_classes).to(have_key('slack'))
-        expect(integration_classes['slack']).to(be(slack.SlackIntegration))
+        expect(stock_integration_classes).to(have_key('slack'))
+        expect(stock_integration_classes['slack']).to(be(slack.SlackIntegration))
 
     with it('should initialize with the correct arguments'):
         slack_url = 'an_url'

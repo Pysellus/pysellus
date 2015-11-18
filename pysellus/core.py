@@ -25,7 +25,7 @@ def main():
 
     threader.launch_threads(
         threader.build_threads(
-            registrar.register(loader.load(user_input))
+            registrar.register(loader.load_test_files(user_input))
         )
     )
 
