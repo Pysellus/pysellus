@@ -6,7 +6,7 @@ In STL, you decorate your test case functions with `failure`; in python, you do 
 
 By now, you've seen the *terminal* integration. It is very simple — it just prints whatever error it happens to stdout.
 
-**Pysellus** comes with three integrations by default: *terminal*, *slack* and *trello*, but you can make your own (See [defining custom integrations](.) - in progress).
+**Pysellus** comes with three integrations by default: *terminal*, *slack* and *trello*, but you can make your own (see [custom integrations](#custom-integrations)).
 
 ---
 
@@ -37,6 +37,7 @@ notify:
             ...
 ```
 
+## Stock integrations
 
 #### [Slack][slack-url]
 
@@ -98,3 +99,22 @@ notify:
 
 [slack-url]:  https://slack.com
 [trello-url]: https://trello.com/
+
+
+## Custom Integrations
+
+**pysellus** comes with some [stock integrations](#stock-integrations), but you can always define your own.
+
+For your custom integration to be recognised, you must define a subclass of `pysellus.interfaces.AbstractIntegration`. Such a class
+can be stored in a Python file wherever you want.
+
+Then, load your custom integration by adding it to the `custom_integrations` section of your configuration file:
+
+```yaml
+custom_integrations:
+    your_integration_name:
+        path: "/absolute/path/to/custom/integration/file.py"
+        name: "NameOfCustomIntegrationClass"
+```
+
+You would then use your custom integration as described [above](#configuration), possibly aliasing it if so you wish.
