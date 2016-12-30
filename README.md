@@ -1,6 +1,6 @@
 # Pysellus - A monitor and alerting system for your data
 
-<img src="https://dl.dropboxusercontent.com/u/29178650/logo.png" alt="Pysellus logo" align="right"/>
+<img src="https://www.dropbox.com/s/kncye6uq629bgup/pysellus-logo.png?raw=1" alt="Pysellus logo" align="right"/>
 
 [![Build Status](https://travis-ci.org/Pysellus/pysellus.svg)](https://travis-ci.org/Pysellus/pysellus)
 [![Coverage Status](https://coveralls.io/repos/Pysellus/pysellus/badge.svg?branch=master&service=github)](https://coveralls.io/github/Pysellus/pysellus?branch=master)
